@@ -5,6 +5,7 @@ const app = express();
 const cors = require('cors');
 const connectToDB = require('./db/connectDB');
 const userRouter = require('./routers/routers');
+const captainRouter = require('./routers/captain.router');
 const cookies = require('cookie-parser');
 
 connectToDB();
@@ -20,5 +21,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/users', userRouter);
+app.use('/api/captains', captainRouter);
 
 module.exports = app;
