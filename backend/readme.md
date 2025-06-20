@@ -269,3 +269,149 @@ The response will be a JSON object containing the following fields if the captai
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
+
+---
+
+# 🛡️ Captain Login API
+
+This API allows registered captains to log in and receive an authentication token.
+
+---
+
+## 📌 Endpoint
+
+**POST** `/api/captains/login/`
+
+---
+
+## 📥 Request
+
+The request must be a JSON object containing the following fields:
+
+- `email`: (string) The registered email address
+- `password`: (string) The captain's password
+
+### Example:
+
+```json
+{
+  "email": "john.smith@example.com",
+  "password": "StrongPass@123"
+}
+```
+
+## 📤 Response
+
+The response will be a JSON object containing the following fields upon successful login:
+
+- `message`: (string) Success message confirming login
+- `captain`: (object) Details of the logged-in captain
+  - `id`: (string) Unique ID of the captain
+  - `fullname`: (object)
+    - `firstname`: (string) First name
+    - `lastname`: (string) Last name
+  - `email`: (string) The captain's email address
+  - `vehicle`: (object)
+    - `color`: (string) Color of the vehicle
+    - `plate`: (string) Vehicle plate number
+    - `capacity`: (number) Vehicle capacity
+    - `vehicleType`: (string) Type of vehicle
+- `token`: (string) JWT token to be used for authentication in protected routes
+
+### Example:
+
+```json
+{
+  "message": "Captain logged in successfully",
+  "captain": {
+    "id": "65a1b2c3d4e5f6g7h8i9j0",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Smith"
+    },
+    "email": "john.smith@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "AB123CD",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+---
+
+# 👤 Get Captain Profile API
+
+This API returns the profile information of the authenticated captain.
+
+---
+
+## 📌 Endpoint
+
+**GET** `/api/captains/profile/`
+
+---
+
+## 🔒 Authentication
+
+Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+---
+
+## 📤 Response
+
+Returns the captain object for the authenticated captain.
+
+### Example:
+
+```json
+{
+  "id": "65a1b2c3d4e5f6g7h8i9j0",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Smith"
+  },
+  "email": "john.smith@example.com",
+  "vehicle": {
+    "color": "Red",
+    "plate": "AB123CD",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+---
+
+# 🚪 Captain Logout API
+
+This API logs out the authenticated captain by blacklisting the current token.
+
+---
+
+## 📌 Endpoint
+
+**GET** `/api/captains/logout/`
+
+---
+
+## 🔒 Authentication
+
+Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+---
+
+## 📤 Response
+
+Returns a message confirming successful logout.
+
+### Example:
+
+```json
+{
+  "message": "Captain logged out successfully"
+}
+```
