@@ -14,9 +14,9 @@ This API allows new users to register and receive a token for authentication.
 
 The request must be a JSON object containing the following fields:
 
-- `firstname`: (string) First name of the user  
-- `lastname`: (string) Last name of the user  
-- `email`: (string) A valid, unique email address  
+- `firstname`: (string) First name of the user
+- `lastname`: (string) Last name of the user
+- `email`: (string) A valid, unique email address
 - `password`: (string) A strong password (must include uppercase, lowercase, number, and special character)
 
 ### Example:
@@ -34,7 +34,7 @@ The request must be a JSON object containing the following fields:
 
 The response will be a JSON object containing the following fields if the user is registered successfully:
 
-- `message`: (string) Success message confirming registration  
+- `message`: (string) Success message confirming registration
 - `user`: (object) Details of the newly registered user
   - `id`: (string) Unique ID assigned to the user
   - `fullname`: (object) Contains:
@@ -58,3 +58,59 @@ The response will be a JSON object containing the following fields if the user i
   },
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
+```
+
+---
+
+# 🔐 Login User API
+
+This API allows existing users to login and receive an authentication token.
+
+---
+
+## 📌 Endpoint
+
+**POST** `/api/users/login/`
+
+---
+
+## 📥 Request
+
+The request must be a JSON object containing the following fields:
+
+- `email`: (string) The registered email address
+- `password`: (string) The user's password
+
+### Example:
+
+```json
+{
+  "email": "cortdoe123@example.com",
+  "password": "Teut@12345"
+}
+```
+
+## 📤 Response
+
+The response will be a JSON object containing the following fields upon successful login:
+
+- `message`: (string) Success message confirming login
+- `user`: (object) Details of the logged-in user
+  - `id`: (string) Unique ID of the user
+  - `fullname`: (string) Full name of the user
+  - `email`: (string) The user's email address
+- `token`: (string) JWT token to be used for authentication in protected routes
+
+### Example:
+
+```json
+{
+  "message": "User logged in successfully",
+  "user": {
+    "id": "64a1b2c3d4e5f6g7h8i9j0",
+    "fullname": "Cort Doe",
+    "email": "cortdoe123@example.com"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
