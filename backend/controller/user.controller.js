@@ -2,6 +2,7 @@ const userModel = require("../model/user.model");
 const { validationResult } = require("express-validator");
 const userService = require("../services/user.services");
 const e = require("express");
+const BlacklistToken = require("../model/blacklist.model");
 
 module.exports.registerUser = async (req, res) => {
   // Validate request body
@@ -56,6 +57,7 @@ module.exports.loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
     const token = user.generateAuthToken();
+    res.cookie("token", token);
     res.status(200).json({
       message: "User logged in successfully",
       user: {
@@ -71,3 +73,24 @@ module.exports.loginUser = async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 };
+
+module.exports.getUserProfile = async (req, res,next) => {
+  res.status(200).json(req.user);
+}
+
+module.exports.logoutUser = async (req, res) => { 
+  const token = req.cookies.token || req.headers.authorization.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized access" });
+  }
+  try {
+    // Add token to blacklist
+    await BlacklistToken.create({ token });
+    res.clearCookie("token");
+    res.status(200).json({ message: "User logged out successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+}

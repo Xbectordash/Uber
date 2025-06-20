@@ -114,3 +114,69 @@ The response will be a JSON object containing the following fields upon successf
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
+
+---
+
+# 👤 Get User Profile API
+
+This API returns the profile information of the authenticated user.
+
+---
+
+## 📌 Endpoint
+
+**GET** `/api/users/profile/`
+
+---
+
+## 🔒 Authentication
+
+Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+---
+
+## 📤 Response
+
+Returns the user object for the authenticated user.
+
+### Example:
+
+```json
+{
+  "id": "64a1b2c3d4e5f6g7h8i9j0",
+  "fullname": "Cort Doe",
+  "email": "cortdoe123@example.com"
+}
+```
+
+---
+
+# 🚪 Logout User API
+
+This API logs out the authenticated user by blacklisting the current token.
+
+---
+
+## 📌 Endpoint
+
+**GET** `/api/users/logout/`
+
+---
+
+## 🔒 Authentication
+
+Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+---
+
+## 📤 Response
+
+Returns a message confirming successful logout.
+
+### Example:
+
+```json
+{
+  "message": "User logged out successfully"
+}
+```
