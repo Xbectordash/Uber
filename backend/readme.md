@@ -415,3 +415,256 @@ Returns a message confirming successful logout.
   "message": "Captain logged out successfully"
 }
 ```
+
+---
+
+# 🗺️ Map API Endpoints
+
+These endpoints provide geocoding, distance/time calculation, and address suggestions using Google Maps services. All endpoints require user authentication.
+
+---
+
+## 📌 Get Coordinates
+
+**GET** `/api/maps/get-coordinates`
+
+### Query Parameters
+
+- `address`: (string, required) The address to geocode
+
+### Authentication
+
+Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+### Example Request
+
+```
+GET /api/maps/get-coordinates?address=New+York
+```
+
+### Example Response
+
+```json
+{
+  "message": "Coordinates fetched successfully",
+  "coordinates": {
+    "lat": 40.7127753,
+    "lng": -74.0059728
+  }
+}
+```
+
+---
+
+## 📌 Get Distance and Time
+
+**GET** `/api/maps/get-distance-time`
+
+### Query Parameters
+
+- `origin`: (string, required) The starting address or location
+- `destination`: (string, required) The destination address or location
+
+### Authentication
+
+Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+### Example Request
+
+```
+GET /api/maps/get-distance-time?origin=New+York&destination=Boston
+```
+
+### Example Response
+
+```json
+{
+  "message": "Distance and time fetched successfully",
+  "distanceTime": {
+    "distance": "346 km",
+    "duration": "3 hours 45 mins"
+  }
+}
+```
+
+---
+
+## 📌 Get Suggestions
+
+**GET** `/api/maps/get-suggestions`
+
+### Query Parameters
+
+- `input`: (string, required) The partial address or place name to get suggestions for
+
+### Authentication
+
+Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+### Example Request
+
+```
+GET /api/maps/get-suggestions?input=New
+```
+
+### Example Response
+
+```json
+{
+  "message": "Suggestions fetched successfully",
+  "suggestions": [
+    "New York, NY, USA",
+    "Newark, NJ, USA",
+    "New Orleans, LA, USA"
+  ]
+}
+```
+
+---
+
+# 🚕 Ride API Endpoints
+
+These endpoints allow users to create rides, get fare estimates, and confirm rides.
+
+---
+
+## 📌 Create Ride
+
+**POST** `/api/rides/create-ride`
+
+### Request Body
+
+- `pickupLocation`: (string, required) The pickup address/location
+- `dropoffLocation`: (string, required) The dropoff address/location
+- `vehicleType`: (string, required) Type of vehicle (`car`, `moto`, or `auto`)
+
+### Authentication
+
+Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+### Example Request
+
+```json
+{
+  "pickupLocation": "Vashi Railway Station, Navi Mumbai, Maharashtra",
+  "dropoffLocation": "Chhatrapati Shivaji Maharaj Terminus, Mumbai, Maharashtra",
+  "vehicleType": "car"
+}
+```
+
+### Example Response
+
+```json
+{
+  "message": "Ride created successfully",
+  "ride": {
+    "_id": "660a1b2c3d4e5f6g7h8i9j0",
+    "pickup": "Vashi Railway Station, Navi Mumbai, Maharashtra",
+    "destination": "Chhatrapati Shivaji Maharaj Terminus, Mumbai, Maharashtra",
+    "vehicleType": "car",
+    "status": "pending",
+    "fare": 350,
+    "otp": "123456",
+    "createdAt": "2025-06-23T12:34:56.789Z"
+  }
+}
+```
+
+---
+
+## 📌 Get Fare Estimate
+
+**GET** `/api/rides/get-fare`
+
+### Query Parameters
+
+- `pickup`: (string, required) The pickup address/location
+- `destination`: (string, required) The destination address/location
+
+### Authentication
+
+Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+### Example Request
+
+```
+GET /api/rides/get-fare?pickup=Vashi+Railway+Station,+Navi+Mumbai,+Maharashtra&destination=Chhatrapati+Shivaji+Maharaj+Terminus,+Mumbai,+Maharashtra
+```
+
+### Example Response
+
+```json
+{
+  "message": "Fare fetched successfully",
+  "fare": {
+    "auto": 300,
+    "car": 350,
+    "moto": 250
+  }
+}
+```
+
+---
+
+## 📌 Confirm Ride
+
+**POST** `/api/rides/confirm`
+
+### Request Body
+
+- `rideId`: (string, required) The ride's MongoDB ObjectId
+- `otp`: (string, required) The OTP sent to the user for ride confirmation
+
+### Authentication
+
+Requires a valid JWT token in the `Authorization` header as a Bearer token or in the `token` cookie (captain only).
+
+### Example Request
+
+```json
+{
+  "rideId": "660a1b2c3d4e5f6g7h8i9j0",
+  "otp": "123456"
+}
+```
+
+### Example Response
+
+```json
+{
+  "message": "Ride confirmed successfully",
+  "ride": {
+    "_id": "660a1b2c3d4e5f6g7h8i9j0",
+    "status": "confirmed"
+  }
+}
+```
+
+---
+
+# 🔌 Socket.IO Integration
+
+This backend uses Socket.IO for real-time communication.
+
+## Initialization
+
+Socket.IO is initialized in `server.js` using the exported `initializeSocket(server)` function from `socket.js`.
+
+## Sending Messages
+
+To send a message to a specific socket:
+
+```js
+const { sendMessageToSocket } = require("./socket");
+sendMessageToSocket(socketId, "eventName", { your: "data" });
+```
+
+- `socketId`: The unique ID of the connected socket
+- `eventName`: The event name to emit
+- The third argument is the message payload (object)
+
+## Example Usage
+
+When a user connects, you can store their socket ID and use `sendMessageToSocket` to send them updates (e.g., ride status changes, notifications, etc.).
+
+---

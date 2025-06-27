@@ -61,7 +61,7 @@ const captainSchema = new mongoose.Schema({
     },
   },
   location: {
-    lat: {
+    ltd: {
       type: Number,
       min: -90,
       max: 90,
@@ -76,6 +76,9 @@ const captainSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  socketId: {
+    type: String,
   },
 });
 
