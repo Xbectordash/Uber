@@ -77,10 +77,12 @@ class _LoginFormState extends State<LoginForm> {
               SubmitButton(
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text(StringConstant.loginLogic)),
+                    debugPrint(
+                      'Email: ${emailController.text.trim()}, Password: ${passwordController.text.trim()}',
                     );
+
                     if (widget.isUser) {
+                      debugPrint('User login initiated');
                       final bloc = BlocProvider.of<UserAuthBloc>(
                         context,
                         listen: false,
@@ -94,6 +96,7 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                       );
                     } else {
+                      debugPrint('Captain login initiated');
                       final bloc = BlocProvider.of<CaptainAuthBloc>(
                         context,
                         listen: false,

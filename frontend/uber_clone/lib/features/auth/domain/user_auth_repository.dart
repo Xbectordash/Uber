@@ -42,7 +42,7 @@ class UserAuthRepository {
 
   Future<void> userSignIn(LoginUserRequest data) async {
     debugPrint(
-      '[UserAuthRepository] userSignIn called with: \\ndata: \\${data.toJson()}',
+      '[UserAuthRepository] userSignIn called with: \ndata: ${data.toJson()}',
     );
     try {
       final response = await _dio.post(
@@ -50,15 +50,16 @@ class UserAuthRepository {
         data: data.toJson(),
       );
       debugPrint(
-        '[UserAuthRepository] userSignIn response: \\n\\${response.data}',
+        '[UserAuthRepository] userSignIn response: \n${response.data}',
       );
       final token = response.data['token'];
       if (token != null) {
-        await _storage.write(key: 'user_token', value: token);
+        await _storage.write(key: 'token', value: token);
+        await _storage.write(key: 'isUser', value: 'true');
       }
     } on DioException catch (e) {
       debugPrint(
-        '[UserAuthRepository] Dio POST error: \\${e.response?.data ?? e.message}',
+        '[UserAuthRepository] Dio POST error: ${e.response?.data ?? e.message}',
       );
       rethrow;
     }
@@ -67,7 +68,7 @@ class UserAuthRepository {
   Future<GetUser> getUser() async {
     debugPrint('[UserAuthRepository] getUser called');
     try {
-      final token = await _storage.read(key: 'user_token');
+      final token = await _storage.read(key: 'token');
       final response = await _dio.get(
         ApiEndpoints.getUserEndpoint,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
@@ -89,11 +90,12 @@ class UserAuthRepository {
     debugPrint('[UserAuthRepository] logoutUser called');
     try {
       await _dio.get(ApiEndpoints.logoutUserEndpoint);
-      await _storage.delete(key: 'user_token');
+      await _storage.delete(key: 'token');
+      await _storage.delete(key: 'isUser');
       debugPrint('[UserAuthRepository] logoutUser: token deleted');
     } on DioException catch (e) {
       debugPrint(
-        '[UserAuthRepository] Dio GET error: \\${e.response?.data ?? e.message}',
+        '[UserAuthRepository] Dio GET error: ${e.response?.data ?? e.message}',
       );
       rethrow;
     }

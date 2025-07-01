@@ -17,7 +17,7 @@ class AppRouters {
       GoRoute(
         name: StringConstant.landingRouteName,
         path: '/',
-        builder: (context, state) => const LandingPage(),
+        builder: (context, state) => const AppStartScreen(),
       ),
       GoRoute(
         name: StringConstant.userHomeRouteName,

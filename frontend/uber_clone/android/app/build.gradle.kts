@@ -9,13 +9,17 @@ plugins {
 
 val googleMapsApiKey: String by lazy {
     val props = Properties()
-    val envFile = rootProject.file(".env")
+    val envFile = rootProject.rootDir.resolve(".env")
+
     if (envFile.exists()) {
         props.load(envFile.inputStream())
+    } else {
+        println("❌ .env file not found at: ${envFile.path}")
     }
-    props.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
+    val key = props.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
+    println("🔑 Loaded Google Maps API Key: $key") // <-- ✅ Debug print
+    key
 }
-
 
 android {
     namespace = "com.example.uber_clone"
@@ -40,7 +44,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders["googleMapsApiKey"] = googleMapsApiKey
+         manifestPlaceholders.put("googleMapsApiKey", googleMapsApiKey)
 
     }
 

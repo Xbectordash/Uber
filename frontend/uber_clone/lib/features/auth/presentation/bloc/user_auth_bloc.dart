@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_clone/features/auth/domain/user_auth_repository.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_auth_event.dart';
@@ -28,6 +29,9 @@ class UserAuthBloc extends Bloc<UserAuthEvent, UserAuthState> {
   ) async {
     emit(UserAuthLoading());
     try {
+      debugPrint(
+        'In bloc : Email: ${event.loginUser.email}, Password: ${event.loginUser.password}',
+      );
       await UserAuthRepository().userSignIn(event.loginUser);
       emit(UserLoggedIn());
     } catch (e) {

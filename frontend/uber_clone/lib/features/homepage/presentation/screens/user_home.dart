@@ -32,12 +32,20 @@ class UserHomeScreen extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.menu),
-            color: ColorConst.primary(context),
-            onPressed: () {
-              // TODO: Implement multi-option drawer or menu in the future
+          PopupMenuButton<String>(
+            icon: Icon(Icons.menu, color: ColorConst.primary(context)),
+            onSelected: (value) {
+              if (value == 'logout') {
+                // TODO: Implement logout logic
+                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+              }
             },
+            itemBuilder: (context) => [
+              const PopupMenuItem<String>(
+                value: 'logout',
+                child: Text('Log Out'),
+              ),
+            ],
           ),
         ],
         automaticallyImplyLeading: true, // shows back button if possible

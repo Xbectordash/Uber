@@ -41,7 +41,7 @@ class CaptainAuthRepository {
 
   Future<void> captainSignIn(CaptainLoginRequest data) async {
     debugPrint(
-      '[CaptainAuthRepository] captainSignIn called with: \\ndata: \\${data.toJson()}',
+      '[CaptainAuthRepository] captainSignIn called with: \ndata: ${data.toJson()}',
     );
     try {
       final response = await _dio.post(
@@ -49,24 +49,25 @@ class CaptainAuthRepository {
         data: data.toJson(),
       );
       debugPrint(
-        '[CaptainAuthRepository] captainSignIn response: \\n\\${response.data}',
+        '[CaptainAuthRepository] captainSignIn response: \n${response.data}',
       );
       final token = response.data['token'];
       if (token != null) {
-        await _storage.write(key: 'captain_token', value: token);
+        await _storage.write(key: 'token', value: token);
+        await _storage.write(key: 'isuser', value: 'false');
       }
     } on DioException catch (e) {
       debugPrint(
-        '[CaptainAuthRepository] Dio POST error:  \\${e.response?.data ?? e.message}',
+        '[CaptainAuthRepository] Dio POST error:  ${e.response?.data ?? e.message}',
       );
       rethrow;
     }
   }
 
-  Future<GetCaptain> getCaptain() async {
+  Future<GetCaptain> get() async {
     debugPrint('[CaptainAuthRepository] getCaptain called');
     try {
-      final token = await _storage.read(key: 'captain_token');
+      final token = await _storage.read(key: 'token');
       final response = await _dio.get(
         ApiEndpoints.getCaptainEndpoint,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
@@ -89,6 +90,7 @@ class CaptainAuthRepository {
     try {
       await _dio.get(ApiEndpoints.logoutCaptainEndpoint);
       await _storage.delete(key: 'captain_token');
+      await _storage.delete(key: 'isUser');
       debugPrint('[CaptainAuthRepository] logoutCaptain: token deleted');
     } on DioException catch (e) {
       debugPrint(

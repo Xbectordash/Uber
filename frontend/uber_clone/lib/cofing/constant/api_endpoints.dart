@@ -9,4 +9,8 @@ class ApiEndpoints {
   static const String getCaptainEndpoint = '/api/captains/profile/';
   static const String logoutUserEndpoint = '/api/users/logout/';
   static const String logoutCaptainEndpoint = '/api/captains/logout/';
+  static const String getSuggestion = '/api/maps/get-suggestions/';
+  static const String getDistanceTimeEndpoint = '/api/maps/get-distance-time/';
+  static const String createRideEndpoint = '/api/rides/create-ride';
+  static const String getFareEndpoint = '/api/rides/get-fare';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/panel_content.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/panel_body_content.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/temppanelbody.dart';
 
 class SlidingPanel extends StatefulWidget {
   const SlidingPanel({super.key});
@@ -16,23 +17,13 @@ class _SlidingPanelState extends State<SlidingPanel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
-        // Detect tap anywhere on the empty area of the panel or body
-        onTap: () {
-          if (_panelController.isPanelClosed) {
-            _panelController.open();
-          } else if (_panelController.isPanelOpen) {
-            _panelController.close();
-          }
-        },
-        child: SlidingUpPanel(
-          controller: _panelController,
-          minHeight: 100,
-          maxHeight: 550,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-          panel: const PanelContent(),
-          body: const PanelBodyContent(),
-        ),
+      body: SlidingUpPanel(
+        controller: _panelController,
+        minHeight: MediaQuery.of(context).viewInsets.bottom > 0 ? 250 : 200,
+        maxHeight: MediaQuery.of(context).viewInsets.bottom > 0 ? 400 : 550,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
+        panel: PanelContent(panelController: _panelController),
+        body: const TempPanelBody(),
       ),
     );
   }

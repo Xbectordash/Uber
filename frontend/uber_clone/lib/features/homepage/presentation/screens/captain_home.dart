@@ -13,19 +13,41 @@ class CaptainHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Navigator.of(context).canPop()
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                color: ColorConst.primary(context),
+                onPressed: () => Navigator.of(context).maybePop(),
+              )
+            : null,
         title: Text(
           'Captain Home',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: ColorConst.onPrimary(context),
+            color: ColorConst.primary(context),
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        backgroundColor: ColorConst.primary(context),
-        elevation: 0,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(34)),
-        ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: Icon(Icons.menu, color: ColorConst.primary(context)),
+            onSelected: (value) {
+              if (value == 'logout') {
+                // TODO: Implement logout logic
+                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem<String>(
+                value: 'logout',
+                child: Text('Log Out'),
+              ),
+            ],
+          ),
+        ],
+        automaticallyImplyLeading: true,
       ),
       body: BlocBuilder<CaptainFetchBloc, CaptainFetchState>(
         builder: (context, state) {
@@ -42,14 +64,13 @@ class CaptainHomeScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Center(child: Text("Building"),)
-
+                    Center(child: Text("Building")),
                   ],
                 ),
               ),
             );
           } else if (state is CaptainFetchError) {
-            return Center(child: Text('Error: ${state.message}'));
+            return Center(child: Text('Error: \\${state.message}'));
           } else {
             return const SizedBox.shrink();
           }

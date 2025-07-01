@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uber_clone/features/auth/data/user_model/get_user.dart';
 import 'package:uber_clone/features/auth/domain/captain_auth_repository.dart';
 import 'package:uber_clone/features/auth/data/captain_model/get_captain.dart';
+import 'package:uber_clone/features/auth/domain/user_auth_repository.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/captain_fetch_event.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/captain_fetch_state.dart';
 
@@ -15,8 +17,8 @@ class CaptainFetchBloc extends Bloc<CaptainFetchEvent, CaptainFetchState> {
   ) async {
     emit(CaptainFetchLoading());
     try {
-      GetCaptain captainData = await CaptainAuthRepository().getCaptain();
-      emit(CaptainFetched(captainData));
+       GetCaptain userData = await CaptainAuthRepository().get();
+      emit(CaptainFetched(userData));
     } catch (e) {
       emit(CaptainFetchError(e.toString()));
     }

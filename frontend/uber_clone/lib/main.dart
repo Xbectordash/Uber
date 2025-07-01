@@ -7,6 +7,11 @@ import 'package:uber_clone/features/auth/presentation/bloc/user_auth_bloc.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/captain_auth_bloc.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_fetch_bloc.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/captain_fetch_bloc.dart';
+import 'package:uber_clone/features/homepage/data/get_distance_time_model.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/create_ride_bloc/create_ride_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/sliding_panel.dart';
 import 'package:uber_clone/utils/screen_viewer_util.dart';
 
 
@@ -18,7 +23,10 @@ void main() async {
         BlocProvider(create: (context) => UserAuthBloc()),
         BlocProvider(create: (context) => CaptainAuthBloc()),
         BlocProvider(create: (context) => UserFetchBloc()),
-        BlocProvider(create: (context) => CaptainFetchBloc()),
+        BlocProvider(create: (context) => CaptainFetchBloc(),),
+        BlocProvider(create: (context)=> GetDistanceTimeBloc()),
+        BlocProvider(create: (context)=> CreateRideBloc()),
+        BlocProvider(create: (context)=>SuggestionBloc())
       ],
       child: const MyApp(),
     ),
@@ -38,7 +46,7 @@ class MyApp extends StatelessWidget {
     // return MaterialApp(
     //   debugShowCheckedModeBanner: false,
     //   theme: AppTheme.theme,
-    //   home: ScreenViewerUtil(),
+    //   home: SlidingPanel(),
     // );
   }
 }

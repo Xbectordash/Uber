@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:uber_clone/features/auth/data/captain_model/get_captain.dart';
+import 'package:uber_clone/features/auth/data/user_model/get_user.dart';
 
 abstract class CaptainFetchState extends Equatable {
   @override
