@@ -27,7 +27,11 @@ Future<void> _onFetchDistanceTimeEvent(
     }
     final DistanceTime? distanceTime = rawDistanceTime.distanceTime;
    debugPrint('[GetDistanceTimeBloc] Loaded distanceTime: $distanceTime');
-    emit(LoadedGetDistanceTimeState(distanceTime: distanceTime!));
+    emit(LoadedGetDistanceTimeState(
+      origin: event.origin,
+      destination: event.destination,
+      distanceTime: distanceTime!,
+    ));
   } catch (e) {
     debugPrint('[GetDistanceTimeBloc] Error: $e');
     emit(ErrorGetDistanceTimeState('Failed to fetch distance and time: \\${e.toString()}'));

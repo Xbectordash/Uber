@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/captain_fetch_bloc.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/captain_fetch_event.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/captain_fetch_state.dart';
@@ -36,7 +37,7 @@ class CaptainHomeScreen extends StatelessWidget {
             onSelected: (value) {
               if (value == 'logout') {
                 // TODO: Implement logout logic
-                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                context.goNamed('/');
               }
             },
             itemBuilder: (context) => [

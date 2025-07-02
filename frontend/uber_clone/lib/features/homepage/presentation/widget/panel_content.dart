@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:uber_clone/features/homepage/data/get_distance_time_model.dart';
-import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_bloc.dart';
-import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_state.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/confirm_ride_panel.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/search_panel_widget.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/distance_time_panel.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/vehicle_selection_panel.dart';
 
 class PanelContent extends StatefulWidget {
   final PanelController? panelController;
@@ -41,6 +40,49 @@ class _PanelContentState extends State<PanelContent> {
     super.dispose();
   }
 
+  Widget _buildStepContent(BuildContext context, RideFlowState state) {
+    switch (state.step) {
+      case RideFlowStep.search:
+        return SearchPanelWidget(
+          pickupFocusNode: _pickupFocus,
+          destinationFocusNode: _destinationFocus,
+        );
+      case RideFlowStep.vehicleSelection:
+        return VehicleSelectionPanel(
+          pickupFocus: _pickupFocus,
+          destinationFocus: _destinationFocus,
+        );
+      case RideFlowStep.confirmation:
+        
+        final searchResult = state.searchResult;
+        // Extract pickup, dropoff, fare from state or selectedVehicle/searchResult as needed
+        final pickup = searchResult?.pickupLocation ?? '-';
+        final dropoff = searchResult?.dropoffLocation ?? '-';
+        final fare = state.selectedFare ?? '-';
+        return ConfirmRidePanel(
+          pickupLocation: pickup,
+          dropoffLocation: dropoff,
+          fare: fare,
+        );
+      case RideFlowStep.rideCreated:
+        final ride = state.confirmationData;
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.check_circle, color: Colors.green, size: 48),
+              const SizedBox(height: 12),
+              const Text('Ride Created!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              if (ride != null) ...[
+                const SizedBox(height: 8),
+                Text('Ride ID: \\${ride.userId ?? '-'}'),
+              ]
+            ],
+          ),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,49 +93,36 @@ class _PanelContentState extends State<PanelContent> {
         children: [
           // Larger tap area for the handle
           GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: () {
-              if (widget.panelController != null) {
-                if (widget.panelController!.isPanelClosed) {
-                  widget.panelController!.open();
-                } else {
-                  widget.panelController!.close();
-                }
-              }
-            },
-            child: Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              height: 32, // Larger tap area
-              child: Container(
-                width: 40,
-                height: 5,
-                margin: const EdgeInsets.only(bottom: 8),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          debugPrint('Panel handle tapped');
+          if (widget.panelController != null) {
+            if (widget.panelController!.isPanelClosed) {
+          widget.panelController!.open();
+            } else {
+          widget.panelController!.close();
+            }
+          }
+        },
+        child: Container(
+          alignment: Alignment.center,
+          width: double.infinity,
+          height: 32, // Larger tap area
+          child: Container(
+            width: 40,
+            height: 5,
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(10),
             ),
           ),
-          Expanded(
-            child: BlocBuilder<GetDistanceTimeBloc, GetDistanceTimeState>(
-              builder: (context, state) {
-                if (state is IntialGetDistanceTimeState) {
-                  return SearchPanelWidget(
-                    pickupFocusNode: _pickupFocus,
-                    destinationFocusNode: _destinationFocus,
-                  );
-                } else if (state is LoadingGetDistanceTimeState) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is LoadedGetDistanceTimeState) {
-                  return DistanceTimePanel(distanceTime: state.distanceTime);
-                } else if (state is ErrorGetDistanceTimeState) {
-                  return Center(child: Text('Error: \\${state.message}'));
-                }
-                return const SizedBox.shrink();
-              },
-            ),
+        ),
+          ),
+          BlocBuilder<RideFlowCubit, RideFlowState>(
+            builder: (context, state) {
+              return _buildStepContent(context, state);
+            },
           ),
         ],
       ),

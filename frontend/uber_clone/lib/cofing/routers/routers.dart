@@ -15,9 +15,14 @@ class AppRouters {
   static final GoRouter _router = GoRouter(
     routes: [
       GoRoute(
-        name: StringConstant.landingRouteName,
+        
         path: '/',
         builder: (context, state) => const AppStartScreen(),
+      ),
+      GoRoute(
+        name: StringConstant.landingRouteName,
+        path: '/landing-screen',
+        builder: (context, state) => const LandingPage(),
       ),
       GoRoute(
         name: StringConstant.userHomeRouteName,

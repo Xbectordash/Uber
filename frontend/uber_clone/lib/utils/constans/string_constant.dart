@@ -68,6 +68,7 @@ class StringConstant {
   static const String captainSignupRouteName = "captain-signup";
   static const String landingRouteName = "landing-screen";
 
+
   // Auth - Login/Signup prompt
   static const String dontHaveAccount = "Don't have an account? ";
 
@@ -87,4 +88,14 @@ class StringConstant {
   static const String vehicleTypeRequired = 'Vehicle type required';
   static const String captainSignupLogic = 'Captain signup logic goes here!';
   static const String createCaptainAccountString = "Create Captain Account";
+
+  // Vehicle subtitles
+  static const String carSubtitle = 'Affordable car for daily rides';
+  static const String taxiSubtitle = 'Classic taxi for city travel';
+  static const String motoSubtitle = 'Affordable moto for quick trips';
+
+  // Vehicle types
+  static const String carType = 'car';
+  static const String autoType = 'auto';
+  static const String motorcycleType = 'motorcycle';
 }

@@ -8,6 +8,10 @@ import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_event.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_state.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare_event.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
+import 'package:uber_clone/features/homepage/data/create_ride_model.dart';
 
 class SearchPanelWidget extends StatefulWidget {
   final FocusNode? pickupFocusNode;
@@ -169,20 +173,49 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
                       ),
                     ),
                     onTap: () {
-                      debugPrint('Selected suggestion: ${suggestion.description}');
-                      debugPrint('Pickup controller text: ${_pickupController.text}');
-                    //  If this is the pickup field, update the controller and return
+                      debugPrint('Selected suggestion: \\${suggestion.description}');
+                      debugPrint('Pickup controller text: \\${_pickupController.text}');
+                      // If pickup is empty or matches, set pickup and clear destination
                       if (_pickupController.text.isEmpty ||
                           _pickupController.text == suggestion.description) {
                         _pickupController.text = suggestion.description!;
+                        // Optionally, clear destination field if you have a controller for it
+                        // _destinationController?.clear();
                         return;
                       } else {
+                        // Update destination field if you have a controller for it
+                        // _destinationController?.text = suggestion.description!;
+                        // Fire both distance/time and fare events
                         BlocProvider.of<GetDistanceTimeBloc>(context).add(
                           FetchDistanceTimeEvent(
                             origin: _pickupController.text,
                             destination: suggestion.description!,
                           ),
                         );
+                        // Also fire fare event if you have a GetFareBloc
+                        try {
+                          BlocProvider.of<GetFareBloc>(context).add(
+                            FetchFareEvent(
+                              pickup: _pickupController.text,
+                              destination: suggestion.description!,
+                            ),
+                          );
+                        } catch (e) {
+                          debugPrint('GetFareBloc not found: $e');
+                        }
+                        // Optionally, unfocus destination field to hide keyboard
+                        widget.destinationFocusNode?.unfocus();
+
+                        // Stepper flow: If both pickup and destination are set, move to vehicle selection
+                        final pickup = _pickupController.text;
+                        final dropoff = suggestion.description!;
+                        if (pickup.isNotEmpty && dropoff.isNotEmpty) {
+                          final createRideRequest = CreateRideRequest(
+                            pickupLocation: pickup,
+                            dropoffLocation: dropoff,
+                          );
+                          BlocProvider.of<RideFlowCubit>(context).toVehicleSelection(createRideRequest);
+                        }
                       }
                     },
                   );

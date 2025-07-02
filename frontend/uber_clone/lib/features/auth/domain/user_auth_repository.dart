@@ -89,7 +89,11 @@ class UserAuthRepository {
   Future<void> logoutUser() async {
     debugPrint('[UserAuthRepository] logoutUser called');
     try {
-      await _dio.get(ApiEndpoints.logoutUserEndpoint);
+      final token = await _storage.read(key: 'token');
+      await _dio.get(
+        ApiEndpoints.logoutUserEndpoint,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
       await _storage.delete(key: 'token');
       await _storage.delete(key: 'isUser');
       debugPrint('[UserAuthRepository] logoutUser: token deleted');

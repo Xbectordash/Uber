@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
-import 'package:uber_clone/cofing/routers/routers.dart';
-import 'package:uber_clone/features/landingpage/presentation/screens/landing_page.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AppStartScreen extends StatefulWidget {
   const AppStartScreen({super.key});
+
   @override
   State<AppStartScreen> createState() => _AppStartScreenState();
 }
@@ -24,6 +24,12 @@ class _AppStartScreenState extends State<AppStartScreen> {
     try {
       final token = await _storage.read(key: 'token');
       final isUser = await _storage.read(key: 'isUser');
+
+      if (token != null) {
+        final expiry = JwtDecoder.getExpirationDate(token);
+        debugPrint('Token expires at: $expiry');
+      }
+
       return {'token': token, 'isUser': isUser};
     } catch (e, stack) {
       debugPrint('Error reading from secure storage: $e\n$stack');
@@ -31,19 +37,35 @@ class _AppStartScreenState extends State<AppStartScreen> {
     }
   }
 
+  bool isTokenExpired(String token) {
+    return JwtDecoder.isExpired(token);
+  }
+
+  Future<void> handleSessionExpired(BuildContext context) async {
+    await _storage.deleteAll();
+    if (mounted) {
+      GoRouter.of(context).goNamed('landing-screen');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, String?>> (
+    return FutureBuilder<Map<String, String?>>(
       future: _futureData,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         }
+
         final token = snapshot.data?['token'];
         final isUser = snapshot.data?['isUser'];
+
         debugPrint('Token: $token, IsUser: $isUser');
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (token != null && isUser != null) {
+
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          if (token == null || isUser == null || isTokenExpired(token)) {
+            await handleSessionExpired(context);
+          } else {
             if (isUser == 'true') {
               GoRouter.of(context).goNamed('user-home');
             } else {
@@ -51,8 +73,8 @@ class _AppStartScreenState extends State<AppStartScreen> {
             }
           }
         });
-        // Return an empty container while routing
-        return LandingPage();
+
+        return Container(); // Empty widget while routing
       },
     );
   }

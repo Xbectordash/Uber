@@ -88,8 +88,12 @@ class CaptainAuthRepository {
   Future<void> logoutCaptain() async {
     debugPrint('[CaptainAuthRepository] logoutCaptain called');
     try {
-      await _dio.get(ApiEndpoints.logoutCaptainEndpoint);
-      await _storage.delete(key: 'captain_token');
+      final token = await _storage.read(key: 'token');
+      await _dio.get(
+        ApiEndpoints.logoutUserEndpoint,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      await _storage.delete(key: 'token');
       await _storage.delete(key: 'isUser');
       debugPrint('[CaptainAuthRepository] logoutCaptain: token deleted');
     } on DioException catch (e) {

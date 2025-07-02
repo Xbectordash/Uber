@@ -32,7 +32,7 @@ class _LoginFormState extends State<LoginForm> {
         BlocListener<UserAuthBloc, UserAuthState>(
           listener: (context, state) {
             if (state is UserLoggedIn) {
-              context.goNamed(StringConstant.userHomeRouteName);
+              context.pushNamed(StringConstant.userHomeRouteName);
             } else if (state is UserAuthError) {
               ScaffoldMessenger.of(
                 context,
@@ -43,7 +43,7 @@ class _LoginFormState extends State<LoginForm> {
         BlocListener<CaptainAuthBloc, CaptainAuthState>(
           listener: (context, state) {
             if (state is CaptainLoggedIn) {
-              context.goNamed(StringConstant.captainHomeRouteName);
+              context.pushNamed(StringConstant.captainHomeRouteName);
             } else if (state is CaptainAuthError) {
               ScaffoldMessenger.of(
                 context,
@@ -125,9 +125,9 @@ class _LoginFormState extends State<LoginForm> {
                   TextButton(
                     onPressed: () {
                       if (widget.isUser) {
-                        context.goNamed(StringConstant.signupRouteName);
+                        context.pushNamed(StringConstant.signupRouteName);
                       } else {
-                        context.goNamed(StringConstant.captainSignupRouteName);
+                        context.pushNamed(StringConstant.captainSignupRouteName);
                       }
                     },
                     style: TextButton.styleFrom(

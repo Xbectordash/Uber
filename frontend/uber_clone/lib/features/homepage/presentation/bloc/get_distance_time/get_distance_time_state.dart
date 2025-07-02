@@ -9,17 +9,21 @@ abstract class GetDistanceTimeState extends Equatable{
 class IntialGetDistanceTimeState extends GetDistanceTimeState {}
 class LoadingGetDistanceTimeState extends GetDistanceTimeState {}
 class LoadedGetDistanceTimeState extends GetDistanceTimeState {
-  DistanceTime distanceTime;
+  final String origin;
+  final String destination;
+  final DistanceTime distanceTime;
 
   LoadedGetDistanceTimeState({
+    required this.origin,
+    required this.destination,
     required this.distanceTime,
-
   });
+
   @override
-  List<Object?> get props => [distanceTime];
+  List<Object?> get props => [origin, destination, distanceTime];
 }
 class ErrorGetDistanceTimeState extends GetDistanceTimeState {
-  String message;
+  final String message;
 
   ErrorGetDistanceTimeState(this.message);
 

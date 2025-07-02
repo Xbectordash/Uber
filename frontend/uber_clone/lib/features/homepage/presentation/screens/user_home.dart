@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_fetch_bloc.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_fetch_event.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_fetch_state.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/sliding_panel.dart';
+import 'package:uber_clone/features/auth/domain/user_auth_repository.dart';
 
 class UserHomeScreen extends StatelessWidget {
   const UserHomeScreen({super.key});
@@ -34,10 +36,12 @@ class UserHomeScreen extends StatelessWidget {
         actions: [
           PopupMenuButton<String>(
             icon: Icon(Icons.menu, color: ColorConst.primary(context)),
-            onSelected: (value) {
+            onSelected: (value) async {
               if (value == 'logout') {
-                // TODO: Implement logout logic
-                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                // Call user logout
+                final userAuthRepo = UserAuthRepository();
+                await userAuthRepo.logoutUser();
+                context.goNamed('/');
               }
             },
             itemBuilder: (context) => [
@@ -58,7 +62,6 @@ class UserHomeScreen extends StatelessWidget {
           } else if (state is UserFetchLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is UserFetched) {
-            final user = state.userData;
             return SlidingPanel();
           } else if (state is UserFetchError) {
             return Center(child: Text('Error: ${state.message}'));

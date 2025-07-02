@@ -38,6 +38,8 @@ dependencies:
   flutter_dotenv: ^5.2.1
   geolocator: ^10.1.0
   geocoding: ^3.0.0
+  jwt_decoder: ^2.0.1
+  socket_io_client: ^2.0.3
   
 
 dev_dependencies:
@@ -51,6 +53,8 @@ flutter:
 
   assets:
     - assets/
+    - assets/vechicle/
+
 
   fonts:
     # OpenSans font family with all available variants in assets/fonts/

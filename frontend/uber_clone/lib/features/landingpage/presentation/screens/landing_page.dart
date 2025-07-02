@@ -42,7 +42,7 @@ class LandingPage extends StatelessWidget {
                   children: [
                     ElevatedButton.icon(
                       onPressed: () {
-                        context.goNamed(StringConstant.loginRouteName, extra: true);
+                        context.pushNamed(StringConstant.loginRouteName, extra: true);
                       },
                       icon: const Icon(Icons.person),
                       label: const Text('Passenger'),
@@ -61,7 +61,7 @@ class LandingPage extends StatelessWidget {
                     const SizedBox(width: 16),
                     ElevatedButton.icon(
                       onPressed: () {
-                        context.goNamed(
+                        context.pushNamed(
                           StringConstant.loginRouteName,
                           extra: false,
                         );
