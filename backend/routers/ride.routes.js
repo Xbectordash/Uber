@@ -11,7 +11,7 @@ router.post('/create-ride', [
     body('vehicleType').isIn(['car', 'moto', 'auto']).withMessage('Vehicle type must be one of: car, motorcycle, auto'),
 ], rideController.createRide);
 
-router.get('get-fare',
+router.get('/get-fare',
     authMiddleware.authUser,
     query('pickup').isString().isLength({ min: 3 }).withMessage('Invalid pickup address'),
     query('destination').isString().isLength({min:3}).withMessage('Invalid destination address'),

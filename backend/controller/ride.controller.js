@@ -1,5 +1,5 @@
 const { map } = require("../app");
-const rideService = require("../services/ride.services");
+const getFare = require("../services/ride.services");
 const { validationResult } = require("express-validator");
 const mapsService = require("../services/maps.services");
 const { sendMessageToSocket } = require("../socket");
@@ -63,14 +63,14 @@ module.exports.getFare = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { pickup, destination } = req.body;
+  const { pickup, destination } = req.query;
 
   if (!pickup || !destination) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
-    const fare = await rideService.getFare(pickup, destination);
+    const fare = await getFare(pickup, destination);
     res.status(200).json({ message: "Fare fetched successfully", fare: fare });
   } catch (error) {
     return res
