@@ -15,7 +15,7 @@ class AppRouters {
   static final GoRouter _router = GoRouter(
     routes: [
       GoRoute(
-        
+        name: StringConstant.appStartRouteName,
         path: '/',
         builder: (context, state) => const AppStartScreen(),
       ),

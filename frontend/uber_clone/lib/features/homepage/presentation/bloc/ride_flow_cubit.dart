@@ -9,6 +9,7 @@ enum RideFlowStep {
   vehicleSelection,
   confirmation,
   rideCreated,
+  rideCompleted,
 }
 
 // State for the RideFlowCubit
@@ -69,6 +70,10 @@ class RideFlowCubit extends Cubit<RideFlowState> {
   void toRideCreated(Ride confirmationData) {
     emit(state.copyWith(step: RideFlowStep.rideCreated, confirmationData: confirmationData, error: null));
   }
+  /// Move to completed step after ride creation
+  void toRideCompleted() {
+    emit(state.copyWith(step: RideFlowStep.rideCompleted, error: null));
+  }
 
   /// Go back to search step and clear errors
   void backToSearch() {
@@ -84,4 +89,5 @@ class RideFlowCubit extends Cubit<RideFlowState> {
   void resetFlow() {
     emit(const RideFlowState(step: RideFlowStep.search));
   }
+
 }

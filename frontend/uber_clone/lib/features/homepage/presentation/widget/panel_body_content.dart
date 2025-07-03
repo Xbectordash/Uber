@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'dart:async';
 
 class PanelBodyContent extends StatefulWidget {
-  const PanelBodyContent({super.key});
+  final bool isUser;
+  final String? captainId;
+  const PanelBodyContent({super.key, this.isUser = true, this.captainId});
 
   @override
   State<PanelBodyContent> createState() => _PanelBodyContentState();
@@ -47,11 +50,9 @@ class _PanelBodyContentState extends State<PanelBodyContent> {
         zoom: 15,
       );
     });
-    if (_mapController != null && _currentPosition != null) {
-      _mapController.animateCamera(
-        CameraUpdate.newCameraPosition(_currentPosition!),
-      );
-    }
+    _mapController.animateCamera(
+      CameraUpdate.newCameraPosition(_currentPosition!),
+    );
   }
 
   @override

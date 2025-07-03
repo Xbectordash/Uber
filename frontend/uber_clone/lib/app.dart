@@ -63,14 +63,16 @@ class _AppStartScreenState extends State<AppStartScreen> {
         debugPrint('Token: $token, IsUser: $isUser');
 
         WidgetsBinding.instance.addPostFrameCallback((_) async {
+          debugPrint('AppStartScreen: token=$token, isUser=$isUser');
           if (token == null || isUser == null || isTokenExpired(token)) {
             await handleSessionExpired(context);
+          } else if (isUser == 'true') {
+            GoRouter.of(context).goNamed('user-home');
+          } else if (isUser == 'false') {
+            GoRouter.of(context).goNamed('captain-home');
           } else {
-            if (isUser == 'true') {
-              GoRouter.of(context).goNamed('user-home');
-            } else {
-              GoRouter.of(context).goNamed('captain-home');
-            }
+            // Defensive: if isUser is not 'true' or 'false', treat as expired
+            await handleSessionExpired(context);
           }
         });
 

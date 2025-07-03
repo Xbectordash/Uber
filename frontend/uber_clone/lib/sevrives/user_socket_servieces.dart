@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:uber_clone/cofing/constant/api_endpoints.dart';
 
 class UserSocketService {
   IO.Socket? socket;
 
   void connect(String userId) {
     // Connect to your backend socket server
-    socket = IO.io('http://YOUR_BACKEND_URL:PORT', <String, dynamic>{
+    socket = IO.io(ApiEndpoints.baseUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

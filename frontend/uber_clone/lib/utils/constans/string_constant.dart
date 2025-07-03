@@ -67,6 +67,7 @@ class StringConstant {
   static const String updateUserRouteName = "update-user-screen";
   static const String captainSignupRouteName = "captain-signup";
   static const String landingRouteName = "landing-screen";
+  static const String appStartRouteName = "app-start-screen";
 
 
   // Auth - Login/Signup prompt

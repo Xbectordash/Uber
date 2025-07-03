@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/panel_content.dart';
+import 'package:uber_clone/features/auth/data/captain_model/get_captain.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/captain_content_panel.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/user_content_panel.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/panel_body_content.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/temppanelbody.dart';
 
 class SlidingPanel extends StatefulWidget {
-  const SlidingPanel({super.key});
+  GetCaptain? captainData;
+  final bool isUser;
+  SlidingPanel({super.key, this.isUser = true , this.captainData});
 
   @override
   State<SlidingPanel> createState() => _SlidingPanelState();
@@ -22,7 +26,7 @@ class _SlidingPanelState extends State<SlidingPanel> {
         minHeight: MediaQuery.of(context).viewInsets.bottom > 0 ? 250 : 200,
         maxHeight: MediaQuery.of(context).viewInsets.bottom > 0 ? 400 : 550,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
-        panel: PanelContent(panelController: _panelController),
+        panel: widget.isUser?PanelContent(panelController: _panelController):CaptainContentPanel(captainData: widget.captainData!,),
         body: const TempPanelBody(),
       ),
     );

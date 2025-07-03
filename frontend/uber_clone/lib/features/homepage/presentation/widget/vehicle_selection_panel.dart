@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uber_clone/features/homepage/data/create_ride_model.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/create_ride_bloc/create_ride_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/create_ride_bloc/create_ride_event.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_state.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare_bloc.dart';
@@ -12,14 +15,25 @@ import 'package:uber_clone/utils/constans/string_constant.dart';
 class VehicleSelectionPanel extends StatelessWidget {
   final FocusNode pickupFocus;
   final FocusNode destinationFocus;
+  final String pickupLocation;
+  final String dropoffLocation;
   const VehicleSelectionPanel({
     Key? key,
     required this.pickupFocus,
     required this.destinationFocus,
+    required this.pickupLocation,
+    required this.dropoffLocation,
   }) : super(key: key);
 
   void _onVehicleSelected(BuildContext context, String vehicleType, String? fare) {
     // Move to confirmation step in RideFlowCubit
+    final rideData = CreateRideRequest(
+      pickupLocation: pickupLocation,
+      dropoffLocation: dropoffLocation,
+      vehicleType: vehicleType,
+    );
+    BlocProvider.of<CreateRideBloc>(context).add(FetchCreateRideEvent(rideData: rideData));
+  
     context.read<RideFlowCubit>().toConfirmation(vehicleType, fare ?? '-');
   }
 

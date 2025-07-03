@@ -27,11 +27,13 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
   Timer? _debounce;
   bool _initialPrefillDone = false;
 
+
   @override
   void initState() {
     super.initState();
     _setCurrentLocation();
   }
+
 
   Future<void> _setCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
@@ -207,6 +209,7 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
                         widget.destinationFocusNode?.unfocus();
 
                         // Stepper flow: If both pickup and destination are set, move to vehicle selection
+                        
                         final pickup = _pickupController.text;
                         final dropoff = suggestion.description!;
                         if (pickup.isNotEmpty && dropoff.isNotEmpty) {

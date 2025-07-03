@@ -54,7 +54,7 @@ class CaptainAuthRepository {
       final token = response.data['token'];
       if (token != null) {
         await _storage.write(key: 'token', value: token);
-        await _storage.write(key: 'isuser', value: 'false');
+        await _storage.write(key: 'isUser', value: 'false');
       }
     } on DioException catch (e) {
       debugPrint(
@@ -89,17 +89,24 @@ class CaptainAuthRepository {
     debugPrint('[CaptainAuthRepository] logoutCaptain called');
     try {
       final token = await _storage.read(key: 'token');
-      await _dio.get(
-        ApiEndpoints.logoutUserEndpoint,
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-      );
+      if (token == null) {
+        debugPrint('[CaptainAuthRepository] No token found, skipping logout');
+        return;
+      }
+      debugPrint('[CaptainAuthRepository] Token found: $token');
+      try {
+        await _dio.get(
+          ApiEndpoints.logoutCaptainEndpoint,
+          options: Options(headers: {'Authorization': 'Bearer $token'}),
+        );
+      } catch (e) {
+        debugPrint('[CaptainAuthRepository] Logout request failed, proceeding to clear token anyway: $e');
+      }
       await _storage.delete(key: 'token');
       await _storage.delete(key: 'isUser');
       debugPrint('[CaptainAuthRepository] logoutCaptain: token deleted');
-    } on DioException catch (e) {
-      debugPrint(
-        '[CaptainAuthRepository] Dio GET error:  \\${e.response?.data ?? e.message}',
-      );
+    } catch (e) {
+      debugPrint('[CaptainAuthRepository] Dio GET error:  \\${e.toString()}');
       rethrow;
     }
   }
