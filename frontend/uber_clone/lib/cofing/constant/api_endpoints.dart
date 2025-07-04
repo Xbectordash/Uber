@@ -13,4 +13,5 @@ class ApiEndpoints {
   static const String getDistanceTimeEndpoint = '/api/maps/get-distance-time/';
   static const String createRideEndpoint = '/api/rides/create-ride';
   static const String getFareEndpoint = '/api/rides/get-fare';
+  static const String confirmRideByCaptainEndpoint = '/api/rides/confirm-ride/';
 }

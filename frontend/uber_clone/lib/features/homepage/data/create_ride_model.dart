@@ -174,3 +174,82 @@ class Ride {
 
 
 
+
+
+// class RideModelData {
+//   final String id;
+//   final String userId;
+//   final String? captainID;
+//   final String pickup;
+//   final String destination;
+//   final double fare;
+//   final String status;
+//   final String? duration; // in seconds
+//   final String? distance; // in meters
+//   final String? paymentID;
+//   final String? orderId;
+//   final String? signature;
+//   final String? otp;
+//   final DateTime? createdAt;
+
+//   RideModelData({
+//     required this.id,
+//     required this.userId,
+//     this.captainID,
+//     required this.pickup,
+//     required this.destination,
+//     required this.fare,
+//     required this.status,
+//     this.duration,
+//     this.distance,
+//     this.paymentID,
+//     this.orderId,
+//     this.signature,
+//     this.otp,
+//     this.createdAt,
+//   });
+
+//   factory RideModelData.fromJson(Map<String, dynamic> json) {
+//     return RideModelData(
+//       id: json['_id'] ?? '',
+//       userId: json['userId'] ?? '',
+//       captainID: json['captainID'],
+//       pickup: json['pickup'] ?? '',
+//       destination: json['destination'] ?? '',
+//       fare: (json['fare'] ?? 0).toDouble(),
+//       status: json['status'] ?? 'pending',
+//       duration: json['duration'],
+//       distance: json['distance'],
+//       paymentID: json['paymentID'],
+//       orderId: json['orderId'],
+//       signature: json['signature'],
+//       otp: json['otp'], // May be null if select: false
+//       createdAt: json['createdAt'] != null
+//           ? DateTime.tryParse(json['createdAt'])
+//           : null,
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     return {
+//       '_id': id,
+//       'userId': userId,
+//       'captainID': captainID,
+//       'pickup': pickup,
+//       'destination': destination,
+//       'fare': fare,
+//       'status': status,
+//       'duration': duration,
+//       'distance': distance,
+//       'paymentID': paymentID,
+//       'orderId': orderId,
+//       'signature': signature,
+//       'otp': otp,
+//       'createdAt': createdAt?.toIso8601String(),
+//     };
+//   }
+// }
+
+
+
+

@@ -1,24 +1,26 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uber_clone/features/homepage/data/create_ride_model.dart';
+import 'package:uber_clone/features/homepage/data/ride_model.dart';
+import 'package:uber_clone/features/homepage/data/ride_with_user_model.dart';
 
-
-// Enum for ride flow steps
+/// Enum defining each stage of the ride booking process
 enum RideFlowStep {
   search,
   vehicleSelection,
   confirmation,
+  confirmedByDriver, // ✅ New step
   rideCreated,
   rideCompleted,
 }
 
-// State for the RideFlowCubit
+/// State class representing data for each step
 class RideFlowState extends Equatable {
   final RideFlowStep step;
-  final CreateRideRequest? searchResult; // Holds pickup/dropoff/vehicleType
-  final String? selectedVehicle; // Vehicle type string
-  final String? selectedFare; // Fare for selected vehicle
-  final Ride? confirmationData; // Ride object after creation
+  final CreateRideRequest? searchResult;   // pickup/dropoff/vehicleType
+  final String? selectedVehicle;          // vehicle type string
+  final String? selectedFare;             // selected fare
+  final RideModel? confirmationData;           // ride data
   final String? error;
 
   const RideFlowState({
@@ -35,7 +37,7 @@ class RideFlowState extends Equatable {
     CreateRideRequest? searchResult,
     String? selectedVehicle,
     String? selectedFare,
-    Ride? confirmationData,
+    RideModel? confirmationData,
     String? error,
   }) {
     return RideFlowState(
@@ -49,45 +51,77 @@ class RideFlowState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [step, searchResult, selectedVehicle, selectedFare, confirmationData, error];
+  List<Object?> get props => [
+        step,
+        searchResult,
+        selectedVehicle,
+        selectedFare,
+        confirmationData,
+        error,
+      ];
 }
 
-/// Cubit to manage the ride flow stepper
+/// Cubit to manage the full ride booking flow
 class RideFlowCubit extends Cubit<RideFlowState> {
   RideFlowCubit() : super(const RideFlowState(step: RideFlowStep.search));
 
-  /// Move to vehicle selection step with search result (pickup/dropoff)
+  /// Step 1: User selected pickup/dropoff → show vehicle options
   void toVehicleSelection(CreateRideRequest searchResult) {
-    emit(state.copyWith(step: RideFlowStep.vehicleSelection, searchResult: searchResult, error: null));
+    emit(state.copyWith(
+      step: RideFlowStep.vehicleSelection,
+      searchResult: searchResult,
+      error: null,
+    ));
   }
 
-  /// Move to confirmation step with selected vehicle type and fare
+  /// Step 2: User selected a vehicle & fare → confirm screen
   void toConfirmation(String selectedVehicle, String selectedFare) {
-    emit(state.copyWith(step: RideFlowStep.confirmation, selectedVehicle: selectedVehicle, selectedFare: selectedFare, error: null));
+    emit(state.copyWith(
+      step: RideFlowStep.confirmation,
+      selectedVehicle: selectedVehicle,
+      selectedFare: selectedFare,
+      error: null,
+    ));
   }
 
-  /// Move to ride created step with ride data
-  void toRideCreated(Ride confirmationData) {
-    emit(state.copyWith(step: RideFlowStep.rideCreated, confirmationData: confirmationData, error: null));
+  /// Step 3: Driver has accepted → show waiting/accepted screen
+  void toConfirmedByDriver(RideModel confirmationData) {
+    emit(state.copyWith(
+      step: RideFlowStep.confirmedByDriver,
+      confirmationData: confirmationData,
+      error: null,
+    ));
   }
-  /// Move to completed step after ride creation
+
+  /// Step 4: Ride created → show live ride tracking
+  void toRideCreated(RideModel confirmationData) {
+    emit(state.copyWith(
+      step: RideFlowStep.rideCreated,
+      confirmationData: confirmationData,
+      error: null,
+    ));
+  }
+
+  /// Step 5: Ride completed → show thank you or rate screen
   void toRideCompleted() {
-    emit(state.copyWith(step: RideFlowStep.rideCompleted, error: null));
+    emit(state.copyWith(
+      step: RideFlowStep.rideCompleted,
+      error: null,
+    ));
   }
 
-  /// Go back to search step and clear errors
+  /// Go back to search step
   void backToSearch() {
     emit(const RideFlowState(step: RideFlowStep.search));
   }
 
-  /// Set error message (does not change step)
+  /// Set an error while staying in the current step
   void setError(String error) {
     emit(state.copyWith(error: error));
   }
 
-  /// Reset the entire flow to initial state
+  /// Full reset to initial state
   void resetFlow() {
     emit(const RideFlowState(step: RideFlowStep.search));
   }
-
 }

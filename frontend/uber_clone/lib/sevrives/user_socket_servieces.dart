@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:uber_clone/cofing/constant/api_endpoints.dart';
-
+import 'package:uber_clone/features/homepage/data/create_ride_model.dart';
+import 'package:uber_clone/features/homepage/data/ride_model.dart';
+import 'package:uber_clone/features/homepage/data/ride_with_user_model.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/ride_with_driver_panel.dart';
 class UserSocketService {
+  final RideFlowCubit rideFlowCubit;
   IO.Socket? socket;
 
+  UserSocketService({required this.rideFlowCubit});
+
   void connect(String userId) {
-    // Connect to your backend socket server
     socket = IO.io(ApiEndpoints.baseUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
@@ -14,7 +20,6 @@ class UserSocketService {
 
     socket!.connect();
 
-    // On connect, emit join event
     socket!.on('connect', (_) {
       debugPrint('User connected to socket');
       socket!.emit('join', {
@@ -23,16 +28,17 @@ class UserSocketService {
       });
     });
 
-    // Listen for ride confirmation or updates from backend
     socket!.on('ride-confirmed', (data) {
-      debugPrint('Ride confirmed: $data');
-      // Handle ride confirmation (e.g., show captain details)
+      debugPrint('Ride confirmed from socket when driver accept: $data');
+      final confirmationData = RideModel.fromJson(data);
+
+      // Convert to Ride model
+      rideFlowCubit.toConfirmedByDriver(confirmationData);
+
     });
 
-    // Listen for other events as needed (e.g., ride status updates)
     socket!.on('ride-status-update', (data) {
       debugPrint('Ride status update: $data');
-      // Handle status update
     });
   }
 

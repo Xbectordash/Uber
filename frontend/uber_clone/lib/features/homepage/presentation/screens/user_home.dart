@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_fetch_bloc.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_fetch_event.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_fetch_state.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/sliding_panel.dart';
@@ -18,13 +19,22 @@ class UserHomeScreen extends StatefulWidget {
 }
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
+  late final UserSocketService _userSocketService;
   bool _socketConnected = false;
   String? _lastConnectedUserId;
 
   @override
+  void initState() {
+    super.initState();
+    // Initialize socket service only once with cubit
+    _userSocketService = UserSocketService(
+      rideFlowCubit: context.read<RideFlowCubit>(),
+    );
+  }
+
+  @override
   void dispose() {
-    // Optionally disconnect socket here
-    // UserSocketService().disconnect();
+    _userSocketService.disconnect();
     super.dispose();
   }
 
@@ -44,9 +54,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         title: Text(
           StringConstant.appName,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: ColorConst.primary(context),
-            fontWeight: FontWeight.bold,
-          ),
+                color: ColorConst.primary(context),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         centerTitle: true,
         actions: [
@@ -54,8 +64,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             icon: Icon(Icons.menu, color: ColorConst.primary(context)),
             onSelected: (value) async {
               if (value == 'logout') {
-                // Disconnect socket on logout
-                UserSocketService().disconnect();
+                _userSocketService.disconnect();
                 final userAuthRepo = UserAuthRepository();
                 await userAuthRepo.logoutUser();
                 context.goNamed(StringConstant.appStartRouteName);
@@ -69,7 +78,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             ],
           ),
         ],
-        automaticallyImplyLeading: true, // shows back button if possible
       ),
       body: BlocBuilder<UserFetchBloc, UserFetchState>(
         builder: (context, state) {
@@ -79,16 +87,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           } else if (state is UserFetchLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is UserFetched) {
-            // Connect socket only once per user session
+            // Ensure socket connects only once per user session
             if (!_socketConnected || _lastConnectedUserId != state.userData.sId) {
-              UserSocketService().connect(state.userData.sId!);
+              _userSocketService.connect(state.userData.sId!);
               _socketConnected = true;
               _lastConnectedUserId = state.userData.sId;
             }
-            debugPrint('User data fetched: \\${state.userData.sId}');
+
             return SlidingPanel();
           } else if (state is UserFetchError) {
-            return Center(child: Text('Error: \\${state.message}'));
+            return Center(child: Text('Error: ${state.message}'));
           } else {
             return const SizedBox.shrink();
           }

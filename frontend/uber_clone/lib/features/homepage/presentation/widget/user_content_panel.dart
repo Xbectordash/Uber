@@ -4,6 +4,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/create_ride_panel.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/search_panel_widget.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/ride_with_driver_panel.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/vehicle_selection_panel.dart';
 
 class PanelContent extends StatefulWidget {
@@ -72,7 +73,19 @@ class _PanelContentState extends State<PanelContent> {
           fare: fare,
         );
       case RideFlowStep.rideCreated:
+          return Container();
         // This step is for showing the ride creation confirmation
+
+      case RideFlowStep.confirmedByDriver:
+          final rideData = state.confirmationData;
+          final driverName = rideData!.captain.fullname.firstname;
+          final vehicleNumber = rideData.captain.vehicle.plate;
+          final vehicleName = rideData.captain.vehicle.vehicleType;
+          final otp = rideData.otp;
+          final source = rideData.pickup;
+          final destination = rideData.destination;
+          return RideWithDriverPannel(driverName: driverName, vehicleNumber: vehicleNumber, vehicleName: vehicleName, otp: otp, source: source, destination: destination);
+       
       case RideFlowStep.rideCompleted:
         final ride = state.confirmationData;
         return Center(

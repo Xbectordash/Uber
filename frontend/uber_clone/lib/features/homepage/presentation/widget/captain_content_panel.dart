@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_clone/features/auth/data/captain_model/get_captain.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/driver_side_flow_cubit.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/captain_confirm_otp_panel.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/captain_confirm_panel.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/captain_info_panel.dart';
 
 class CaptainContentPanel extends StatefulWidget {
   final GetCaptain captainData;
 
-  const CaptainContentPanel({
-    super.key,
-    required this.captainData,
-  });
+  const CaptainContentPanel({super.key, required this.captainData});
 
   @override
   State<CaptainContentPanel> createState() => _CaptainContentPanelState();
@@ -15,94 +17,59 @@ class CaptainContentPanel extends StatefulWidget {
 
 class _CaptainContentPanelState extends State<CaptainContentPanel> {
   @override
-  Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
-          fontWeight: FontWeight.w800,
-          color: Colors.black54,
+  void initState() {
+    super.initState();
+
+    // Pass the captainData to the cubit when widget loads
+    final driverFlowCubit = context.read<DriverSideFlowCubit>();
+    driverFlowCubit.setCaptainData(widget.captainData);
+  }
+
+  Widget _buildStepContent(BuildContext context, DriverSideFlowState state) {
+    switch (state.step) {
+      case DriverSideStep.idle:
+        return CaptainInfoPanel(captainData: state.captainData!);
+      case DriverSideStep.rideRequested:
+        // Return some other widget
+        final userData = state.rideData;
+        final rideId = userData!.id;
+        final userName = userData.userFirstName;
+        final pickupLocation = userData.pickup;
+        final dropoffLocation = userData.destination;
+        final distance = userData.fare.toString();
+
+        return CaptainConfirmRidePanel(
+          userName: userName,
+          pickupLocation: pickupLocation,
+          dropoffLocation: dropoffLocation,
+          distance: distance,
+          rideId: rideId,
         );
+      case DriverSideStep.forConfirmingOtp:
+        final userData = state.rideData!;
+        final userName = userData.userFirstName;
+        final pickupLocation = userData.pickup;
+        final dropoffLocation = userData.destination;
+        final distance = userData.fare.toString();
+        return CaptainOtpStartPanel(
+          userName: userName,
+          pickupLocation: pickupLocation,
+          dropoffLocation: dropoffLocation,
+          distance: distance,
+        );
+    }
+  }
 
-    final captain = widget.captainData.captain;
-    final status = captain?.status ?? '';
-    final fullName = '${captain?.fullname?.firstname ?? ''} ${captain?.fullname?.lastname ?? ''}'.trim();
-    final vehicleColor = captain?.vehicle?.color ?? '';
-    final plate = captain?.vehicle?.plate ?? '';
-    final vehicleType = captain?.vehicle?.vehicleType ?? '';
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<DriverSideFlowCubit, DriverSideFlowState>(
+      builder: (context, state) {
+        if (state.captainData == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black12),
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
-      ),
-      child: Stack(
-        children: [
-          // Status Badge - Top Right
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: status.toLowerCase() == "active"
-                    ? Colors.green[100]
-                    : Colors.red[100],
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                status.toUpperCase(),
-                style: textStyle?.copyWith(
-                  color: status.toLowerCase() == "active"
-                      ? Colors.green[800]
-                      : Colors.red[800],
-                ),
-              ),
-            ),
-          ),
-
-          // Main Content
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  // Profile Icon
-                  Container(
-                    margin: const EdgeInsets.only(right: 12),
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey.shade200,
-                    ),
-                    child: const Icon(
-                      Icons.person,
-                      size: 32,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
-
-                  // Name and Vehicle Color
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(fullName, style: textStyle),
-                        const SizedBox(height: 4),
-                        Text('Color: $vehicleColor', style: textStyle),
-                        if (vehicleType.isNotEmpty)
-                          Text('Type: $vehicleType', style: textStyle),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              // Plate Number
-              Text('Plate: $plate', style: textStyle),
-            ],
-          ),
-        ],
-      ),
+        return _buildStepContent(context, state);
+      },
     );
   }
 }

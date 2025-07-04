@@ -1,8 +1,13 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:uber_clone/cofing/constant/api_endpoints.dart';
+import 'package:uber_clone/features/homepage/data/ride_with_user_model.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/driver_side_flow_cubit.dart';
 
 class CaptainSocketService {
+  DriverSideFlowCubit driverSideFlowCubit;
   IO.Socket? socket;
+  CaptainSocketService({required this.driverSideFlowCubit});
 
   void connect(String captainId) {
     // Connect to your backend socket server
@@ -26,6 +31,10 @@ class CaptainSocketService {
     socket!.on('ride-request', (data) {
       print('Received ride request: $data');
       // Show ride request to captain, allow accept/reject, etc.
+      final rideData = RideWithUser.fromJson(data);
+      driverSideFlowCubit
+          .toRideRequested(rideData);
+
     });
   }
 
