@@ -184,4 +184,5 @@ class RideInfoTile extends StatelessWidget {
       ),
     );
   }
-}
+}//helo
+
