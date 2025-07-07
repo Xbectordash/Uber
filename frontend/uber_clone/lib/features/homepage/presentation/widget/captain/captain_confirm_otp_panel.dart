@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:socket_io_client/socket_io_client.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/start_ride_bloc/start_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/start_ride_bloc/start_ride_event.dart';
 
 class CaptainOtpStartPanel extends StatefulWidget {
   final String userName;
   final String pickupLocation;
   final String dropoffLocation;
   final String distance;
+  final rideId;
 
   const CaptainOtpStartPanel({
     super.key,
@@ -12,6 +17,7 @@ class CaptainOtpStartPanel extends StatefulWidget {
     required this.pickupLocation,
     required this.dropoffLocation,
     required this.distance,
+    required this.rideId
   });
 
   @override
@@ -31,6 +37,13 @@ class _CaptainOtpStartPanelState extends State<CaptainOtpStartPanel> {
     final otp = _otpController.text.trim();
     if (otp.isNotEmpty) {
       // Start ride logic here
+      debugPrint("befor calling start request");
+      BlocProvider.of<StartRideBloc>(context).add(
+        StartRideRequested(
+          rideId: widget.rideId,
+          otp: otp,
+        ),
+      );
     }
   }
 

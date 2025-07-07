@@ -155,12 +155,16 @@ module.exports.confirmRide = async (req, res) => {
 };
 
 module.exports.startRide = async (req, res) => {
+  console.debug("startRide called with query:", req.query);
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.debug("Validation errors in startRide:", errors.array());
     return res.status(400).json({ errors: errors.array() });
   }
 
   const { rideId, otp } = req.query;
+  console.debug("startRide params:", { rideId, otp, captain: req.captain && req.captain._id });
 
   try {
     const ride = await rideService.startRide({
@@ -168,39 +172,49 @@ module.exports.startRide = async (req, res) => {
       otp,
       captain: req.captain,
     });
+    console.debug("Ride started:", ride);
 
     sendMessageToSocket(ride.user.socketId, {
       event: 'ride-started',
       data: ride,
     });
+    console.debug("Sent 'ride-started' event to user socket:", ride.user.socketId);
 
     return res.status(200).json(ride);
   } catch (err) {
+    console.error("Error in startRide:", err.message);
     return res.status(500).json({ message: err.message });
   }
 };
 
 module.exports.endRide = async (req, res) => {
+  console.debug("endRide called with body:", req.body);
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.debug("Validation errors in endRide:", errors.array());
     return res.status(400).json({ errors: errors.array() });
   }
 
   const { rideId } = req.body;
+  console.debug("endRide params:", { rideId, captain: req.captain && req.captain._id });
 
   try {
     const ride = await rideService.endRide({
       rideId,
       captain: req.captain,
     });
+    console.debug("Ride ended:", ride);
 
     sendMessageToSocket(ride.user.socketId, {
       event: 'ride-ended',
       data: ride,
     });
+    console.debug("Sent 'ride-ended' event to user socket:", ride.user.socketId);
 
     return res.status(200).json(ride);
   } catch (err) {
+    console.error("Error in endRide:", err.message);
     return res.status(500).json({ message: err.message });
   }
 };

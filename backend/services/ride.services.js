@@ -140,10 +140,10 @@ module.exports.startRide = async ({ rideId, otp, captain }) => {
     { status: 'ongoing' }
   );
 
-  sendMessageToSocketId(ride.user.socketId, {
-    event: 'ride-started',
-    data: ride,
-  });
+  // sendMessageToSocketId(ride.user.socketId, {
+  //   event: 'ride-started',
+  //   data: ride,
+  // });
 
   return ride;
 };

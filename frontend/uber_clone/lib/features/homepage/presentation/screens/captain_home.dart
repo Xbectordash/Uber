@@ -9,7 +9,7 @@ import 'package:uber_clone/features/homepage/presentation/bloc/driver_side_flow_
 import 'package:uber_clone/features/homepage/presentation/widget/sliding_panel.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
-import 'package:uber_clone/sevrives/captain_socket_servieces.dart';
+import 'package:uber_clone/services/captain_socket_servieces.dart';
 import 'package:uber_clone/features/auth/domain/captain_auth_repository.dart';
 
 class CaptainHomeScreen extends StatefulWidget {

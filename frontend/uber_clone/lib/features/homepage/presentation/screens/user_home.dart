@@ -9,7 +9,7 @@ import 'package:uber_clone/utils/constans/color_const.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/sliding_panel.dart';
 import 'package:uber_clone/features/auth/domain/user_auth_repository.dart';
-import 'package:uber_clone/sevrives/user_socket_servieces.dart';
+import 'package:uber_clone/services/user_socket_servieces.dart';
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({super.key});

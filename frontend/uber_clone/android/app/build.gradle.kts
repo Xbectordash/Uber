@@ -60,3 +60,6 @@ android {
 flutter {
     source = "../.."
 }
+// tasks.withType(JavaCompile).configureEach {
+//     options.compilerArgs << "-source" << "11" << "-target" << "11" << "-Xlint:-options"
+// }

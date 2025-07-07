@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:uber_clone/features/auth/data/captain_model/get_captain.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/captain_content_panel.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/user_content_panel.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/panel_body_content.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/captain/captain_content_panel.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/passenger/user_content_panel.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/passenger/panel_body_content.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/temppanelbody.dart';
 
 class SlidingPanel extends StatefulWidget {

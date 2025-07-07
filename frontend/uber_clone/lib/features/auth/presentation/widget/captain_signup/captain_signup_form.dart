@@ -152,9 +152,6 @@ class _CaptainSignupFormState extends State<CaptainSignupForm> {
                     ),
                   ),
                 );
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(StringConstant.captainSignupLogic)),
-                );
               }
             },
             text: StringConstant.createAccountString,

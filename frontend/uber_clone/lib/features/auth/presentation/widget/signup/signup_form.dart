@@ -124,9 +124,6 @@ class _SignupFormState extends State<SignupForm> {
                     ),
                   ),
                 );
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(StringConstant.accountCreationLogic)),
-                );
               }
             },
           ),

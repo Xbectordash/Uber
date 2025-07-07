@@ -5,7 +5,8 @@ import 'package:uber_clone/features/homepage/data/create_ride_model.dart';
 import 'package:uber_clone/features/homepage/data/ride_model.dart';
 import 'package:uber_clone/features/homepage/data/ride_with_user_model.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/ride_with_driver_panel.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/captain/ride_with_driver_panel.dart';
+
 class UserSocketService {
   final RideFlowCubit rideFlowCubit;
   IO.Socket? socket;
@@ -22,10 +23,7 @@ class UserSocketService {
 
     socket!.on('connect', (_) {
       debugPrint('User connected to socket');
-      socket!.emit('join', {
-        'userID': userId,
-        'userType': 'user',
-      });
+      socket!.emit('join', {'userID': userId, 'userType': 'user'});
     });
 
     socket!.on('ride-confirmed', (data) {
@@ -34,11 +32,18 @@ class UserSocketService {
 
       // Convert to Ride model
       rideFlowCubit.toConfirmedByDriver(confirmationData);
-
     });
 
     socket!.on('ride-status-update', (data) {
-      debugPrint('Ride status update: $data');
+      debugPrint('Ride status update from frontend: $data');
+
+    });
+    socket!.on('ride-started', (data) {
+      debugPrint('it is from frontend ride - start: $data');
+            final confirmationData = RideModel.fromJson(data);
+
+      // Convert to Ride model
+      rideFlowCubit.rideStarted(confirmationData);
     });
   }
 

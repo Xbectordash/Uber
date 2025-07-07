@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_clone/features/auth/data/captain_model/get_captain.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/driver_side_flow_cubit.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/captain_confirm_otp_panel.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/captain_confirm_panel.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/captain_info_panel.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/captain/captain_confirm_otp_panel.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/captain/captain_confirm_panel.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/captain/captain_info_panel.dart';
 
 class CaptainContentPanel extends StatefulWidget {
   final GetCaptain captainData;
@@ -51,11 +51,13 @@ class _CaptainContentPanelState extends State<CaptainContentPanel> {
         final pickupLocation = userData.pickup;
         final dropoffLocation = userData.destination;
         final distance = userData.fare.toString();
+        final rideId = userData.id;
         return CaptainOtpStartPanel(
           userName: userName,
           pickupLocation: pickupLocation,
           dropoffLocation: dropoffLocation,
           distance: distance,
+          rideId: rideId,
         );
     }
   }

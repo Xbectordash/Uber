@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:uber_clone/utils/app_assets_util.dart';
 
 class RideWithDriverPannel extends StatelessWidget {
@@ -8,7 +9,7 @@ class RideWithDriverPannel extends StatelessWidget {
   final String otp;
   final String source;
   final String destination;
-
+  final bool isWating;
 
   const RideWithDriverPannel({
     super.key,
@@ -18,7 +19,7 @@ class RideWithDriverPannel extends StatelessWidget {
     required this.otp,
     required this.source,
     required this.destination,
-
+    required this.isWating,
   });
 
   @override
@@ -114,24 +115,31 @@ class RideWithDriverPannel extends StatelessWidget {
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                // Handle payment
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-              child: Text(
-                "Make Payment",
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+            child: isWating
+                ? Lottie.asset(
+                    'assets/animations/waiting.json',
+                    height: 60,
+                    fit: BoxFit.contain,
+                    repeat: true,
+                  )
+                : ElevatedButton(
+                    onPressed: () {
+                      // Handle payment
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
-              ),
-            ),
+                    child: Text(
+                      "Make Payment",
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
           ),
         ],
       ),

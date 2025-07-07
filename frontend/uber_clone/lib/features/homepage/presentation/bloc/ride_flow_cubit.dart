@@ -10,7 +10,7 @@ enum RideFlowStep {
   vehicleSelection,
   confirmation,
   confirmedByDriver, // ✅ New step
-  rideCreated,
+  rideStarted,
   rideCompleted,
 }
 
@@ -83,6 +83,13 @@ class RideFlowCubit extends Cubit<RideFlowState> {
       error: null,
     ));
   }
+  void rideStarted(RideModel confirmationData) {
+    emit(state.copyWith(
+      step: RideFlowStep.rideStarted,
+      confirmationData: confirmationData,
+      error: null,
+    ));
+  }
 
   /// Step 3: Driver has accepted → show waiting/accepted screen
   void toConfirmedByDriver(RideModel confirmationData) {
@@ -96,7 +103,7 @@ class RideFlowCubit extends Cubit<RideFlowState> {
   /// Step 4: Ride created → show live ride tracking
   void toRideCreated(RideModel confirmationData) {
     emit(state.copyWith(
-      step: RideFlowStep.rideCreated,
+      step: RideFlowStep.rideStarted,
       confirmationData: confirmationData,
       error: null,
     ));

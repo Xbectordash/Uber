@@ -7,8 +7,8 @@ import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time
 import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_state.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare_state.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/select_vechicle.dart';
-import 'package:uber_clone/features/homepage/presentation/widget/search_panel_widget.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/passenger/select_vechicle.dart';
+import 'package:uber_clone/features/homepage/presentation/widget/passenger/search_panel_widget.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 
