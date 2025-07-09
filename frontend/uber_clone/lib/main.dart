@@ -12,6 +12,7 @@ import 'package:uber_clone/features/homepage/presentation/bloc/create_ride_bloc/
 import 'package:uber_clone/features/homepage/presentation/bloc/driver_side_flow_cubit.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/start_ride_bloc/start_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/sliding_panel.dart';
@@ -34,7 +35,7 @@ void main() async {
         BlocProvider(create: (context) => GetFareBloc()),
         BlocProvider(create: (context) => RideFlowCubit()),
         BlocProvider(create: (context) => DriverSideFlowCubit()),
-          BlocProvider(create: (context) => StartRideBloc()),
+        BlocProvider(create: (context) => GetRoutesBloc()),
       ],
       child: const MyApp(),
     ),

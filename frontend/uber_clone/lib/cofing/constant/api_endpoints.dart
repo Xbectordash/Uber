@@ -1,6 +1,6 @@
 class ApiEndpoints {
   ApiEndpoints._();
-  static const String baseUrl = 'http://192.168.0.123:4000';
+  static const String baseUrl = 'http://192.168.0.113:4000';
   static const String createUserEndpoint = '/api/users/register/';
   static const String loginUserEndpoint = '/api/users/login/';
   static const String getUserEndpoint = '/api/users/profile/';
@@ -14,5 +14,7 @@ class ApiEndpoints {
   static const String createRideEndpoint = '/api/rides/create-ride';
   static const String getFareEndpoint = '/api/rides/get-fare';
   static const String confirmRideByCaptainEndpoint = '/api/rides/confirm-ride/';
-   static const String startRide = '/api/rides/start-ride/';
+  static const String startRide = '/api/rides/start-ride/';
+  static const String endRide = '/api/rides/end-ride/';
+  static const String getRouteEndpoint = '/api/maps/get-routes/';
 }

@@ -5,6 +5,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_event.bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_event.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_event.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_state.dart';
@@ -16,7 +18,11 @@ import 'package:uber_clone/features/homepage/data/create_ride_model.dart';
 class SearchPanelWidget extends StatefulWidget {
   final FocusNode? pickupFocusNode;
   final FocusNode? destinationFocusNode;
-  const SearchPanelWidget({super.key, this.pickupFocusNode, this.destinationFocusNode});
+  const SearchPanelWidget({
+    super.key,
+    this.pickupFocusNode,
+    this.destinationFocusNode,
+  });
 
   @override
   State<SearchPanelWidget> createState() => _SearchPanelWidgetState();
@@ -27,19 +33,16 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
   Timer? _debounce;
   bool _initialPrefillDone = false;
 
-
   @override
   void initState() {
     super.initState();
     _setCurrentLocation();
   }
 
-
   Future<void> _setCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever)
-      return;
+        permission == LocationPermission.deniedForever) return;
 
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
@@ -52,8 +55,13 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
 
     if (placemarks.isNotEmpty) {
       Placemark place = placemarks[0];
-      String address =
-          '${place.name}, ${place.locality}, ${place.administrativeArea}';
+      String address = [
+        place.street,
+        place.subLocality,
+        place.locality,
+        place.administrativeArea,
+        place.country
+      ].where((e) => e != null && e.isNotEmpty).join(', ');
       _initialPrefillDone = false;
       _pickupController.text = address;
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -64,7 +72,7 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
 
   void _onPickupChanged(String value) {
     if (!_initialPrefillDone) return;
-     if (value.trim().length < 3) {
+    if (value.trim().length < 3) {
       if (_debounce?.isActive ?? false)
         _debounce!.cancel(); // cancel old debounce
       BlocProvider.of<SuggestionBloc>(context).add(ResetSuggestionsEvent());
@@ -89,7 +97,9 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
       if (_debounce?.isActive ?? false) _debounce!.cancel();
       final debouncedValue = value;
       _debounce = Timer(const Duration(milliseconds: 600), () {
-        BlocProvider.of<SuggestionBloc>(context).add(FetchSuggestionsEvent(debouncedValue));
+        BlocProvider.of<SuggestionBloc>(
+          context,
+        ).add(FetchSuggestionsEvent(debouncedValue));
       });
     }
   }
@@ -175,50 +185,82 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
                       ),
                     ),
                     onTap: () {
-                      debugPrint('Selected suggestion: \\${suggestion.description}');
-                      debugPrint('Pickup controller text: \\${_pickupController.text}');
-                      // If pickup is empty or matches, set pickup and clear destination
-                      if (_pickupController.text.isEmpty ||
-                          _pickupController.text == suggestion.description) {
+                      debugPrint(
+                        'Selected suggestion: \\${suggestion.description}',
+                      );
+                      debugPrint(
+                        'Pickup controller text: \\${_pickupController.text}',
+                      );
+                      // Determine which field is focused
+                      final isPickupFocused = widget.pickupFocusNode?.hasFocus ?? false;
+                      final isDestinationFocused = widget.destinationFocusNode?.hasFocus ?? false;
+
+                      if (isPickupFocused) {
+                        // Set pickup from suggestion
                         _pickupController.text = suggestion.description!;
                         // Optionally, clear destination field if you have a controller for it
                         // _destinationController?.clear();
+                        // Optionally, unfocus pickup
+                        widget.pickupFocusNode?.unfocus();
                         return;
-                      } else {
-                        // Update destination field if you have a controller for it
+                      } else if (isDestinationFocused) {
+                        // Set destination from suggestion
                         // _destinationController?.text = suggestion.description!;
-                        // Fire both distance/time and fare events
-                        BlocProvider.of<GetDistanceTimeBloc>(context).add(
-                          FetchDistanceTimeEvent(
-                            origin: _pickupController.text,
-                            destination: suggestion.description!,
-                          ),
-                        );
-                        // Also fire fare event if you have a GetFareBloc
-                        try {
-                          BlocProvider.of<GetFareBloc>(context).add(
-                            FetchFareEvent(
-                              pickup: _pickupController.text,
+                        // Only call APIs if both pickup and destination are filled and different
+                        if (_pickupController.text.isNotEmpty && _pickupController.text != suggestion.description) {
+                          BlocProvider.of<GetDistanceTimeBloc>(context).add(
+                            FetchDistanceTimeEvent(
+                              origin: _pickupController.text,
                               destination: suggestion.description!,
                             ),
                           );
-                        } catch (e) {
-                          debugPrint('GetFareBloc not found: $e');
+                          try {
+                            debugPrint(
+                              'Dispatching FetchRoutesEvent: origin=${_pickupController.text}, destination=${suggestion.description}',
+                            );
+                            BlocProvider.of<GetFareBloc>(context).add(
+                              FetchFareEvent(
+                                pickup: _pickupController.text,
+                                destination: suggestion.description!,
+                              ),
+                            );
+                            // BlocProvider.of<GetRoutesBloc>(context).add(
+                            //   FetchRoutesEvent(
+                            //     origin: _pickupController.text,
+                            //     destination: suggestion.description!,
+                            //   ),
+                            // );
+                          } catch (e) {
+                            debugPrint(
+                              'GetFareBloc or GetRoutesBloc not found: $e',
+                            );
+                          }
+                          widget.destinationFocusNode?.unfocus();
+                          // Stepper flow: If both pickup and destination are set, move to vehicle selection
+                          final pickup = _pickupController.text;
+                          final dropoff = suggestion.description!;
+                          if (pickup.isNotEmpty && dropoff.isNotEmpty) {
+                            final createRideRequest = CreateRideRequest(
+                              pickupLocation: pickup,
+                              dropoffLocation: dropoff,
+                            );
+                            BlocProvider.of<RideFlowCubit>(
+                              context,
+                            ).toVehicleSelection(createRideRequest);
+                          }
+                        } else {
+                          // If pickup is empty, set pickup instead
+                          _pickupController.text = suggestion.description!;
+                          widget.pickupFocusNode?.unfocus();
                         }
-                        // Optionally, unfocus destination field to hide keyboard
-                        widget.destinationFocusNode?.unfocus();
-
-                        // Stepper flow: If both pickup and destination are set, move to vehicle selection
-                        
-                        final pickup = _pickupController.text;
-                        final dropoff = suggestion.description!;
-                        if (pickup.isNotEmpty && dropoff.isNotEmpty) {
-                          final createRideRequest = CreateRideRequest(
-                            pickupLocation: pickup,
-                            dropoffLocation: dropoff,
-                          );
-                          BlocProvider.of<RideFlowCubit>(context).toVehicleSelection(createRideRequest);
+                        return;
+                      } else {
+                        // Default: set pickup if empty, else do nothing
+                        if (_pickupController.text.isEmpty) {
+                          _pickupController.text = suggestion.description!;
+                          widget.pickupFocusNode?.unfocus();
                         }
+                        return;
                       }
                     },
                   );

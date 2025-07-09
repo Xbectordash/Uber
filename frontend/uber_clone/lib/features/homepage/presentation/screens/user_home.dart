@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_fetch_bloc.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_fetch_event.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_fetch_state.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
@@ -29,6 +30,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     // Initialize socket service only once with cubit
     _userSocketService = UserSocketService(
       rideFlowCubit: context.read<RideFlowCubit>(),
+      context: context,
+
     );
   }
 

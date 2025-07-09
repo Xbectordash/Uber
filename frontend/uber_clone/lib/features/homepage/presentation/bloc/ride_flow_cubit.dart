@@ -2,8 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:uber_clone/features/homepage/data/create_ride_model.dart';
 import 'package:uber_clone/features/homepage/data/ride_model.dart';
-import 'package:uber_clone/features/homepage/data/ride_with_user_model.dart';
-
 /// Enum defining each stage of the ride booking process
 enum RideFlowStep {
   search,

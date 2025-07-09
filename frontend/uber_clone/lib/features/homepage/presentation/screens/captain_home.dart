@@ -11,6 +11,7 @@ import 'package:uber_clone/utils/constans/color_const.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/services/captain_socket_servieces.dart';
 import 'package:uber_clone/features/auth/domain/captain_auth_repository.dart';
+import 'package:geolocator/geolocator.dart';
 
 class CaptainHomeScreen extends StatefulWidget {
   const CaptainHomeScreen({super.key});
@@ -34,11 +35,16 @@ class _CaptainHomeScreenState extends State<CaptainHomeScreen> {
 
   void _startCaptainLocationUpdates(String captainId) {
     _locationTimer?.cancel();
-    _locationTimer = Timer.periodic(const Duration(minutes: 10), (_) {
-      const double staticLat = 28.6139;
-      const double staticLng = 77.2090;
-      debugPrint('Captain Location: $staticLat, $staticLng');
-      _socketService.updateLocation(captainId, staticLat, staticLng);
+    _locationTimer = Timer.periodic(const Duration(seconds: 10), (_) async {
+      try {
+        final position = await Geolocator.getCurrentPosition();
+        final double lat = position.latitude;
+        final double lng = position.longitude;
+        debugPrint('Captain Location: $lat, $lng');
+        _socketService.updateLocation(captainId, lat, lng);
+      } catch (e) {
+        debugPrint('Failed to get current location: $e');
+      }
     });
   }
 

@@ -16,7 +16,7 @@ class StartRideRepo {
         ),
       );
 
-  Future<void> startRide(String rideId, String otp) async {
+  Future<Response>  startRide({required String rideId, required String otp}) async {
     debugPrint('startRide called with rideId: $rideId and otp: $otp');
     try {
       final token = await _storage.read(key: 'token');
@@ -26,36 +26,38 @@ class StartRideRepo {
       }
       debugPrint('Token retrieved: $token');
 
-      debugPrint('Sending POST request to ${ApiEndpoints.startRide} with queryParameters: {rideId: $rideId, otp: $otp}');
+      debugPrint(
+        'Sending POST request to ${ApiEndpoints.startRide} with queryParameters: {rideId: $rideId, otp: $otp}',
+      );
       final response = await _dio.get(
         ApiEndpoints.startRide,
-        queryParameters: {
-          "rideId": rideId,
-          "otp": otp,
-        },
+        queryParameters: {"rideId": rideId, "otp": otp},
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       debugPrint('Response status code: ${response.statusCode}');
       debugPrint('Response data: ${response.data}');
 
-      if (response.statusCode != 200) {
-        debugPrint('Failed to start ride. Status code: ${response.statusCode}');
-        throw Exception('Failed to start ride. Server responded with status code: ${response.statusCode}');
+      if ([200, 201].contains(response.statusCode)) {
+
+        return response;
+      } else {
+        throw Exception('Failed to start ride: ${response.statusCode}');
       }
-      if (response.data == null) {
-        debugPrint('Response data is null.');
-        throw Exception('Failed to start ride. Response data is null.');
-      }
+
     } on DioException catch (dioError) {
       debugPrint('DioException occurred: ${dioError.message}');
       if (dioError.type == DioExceptionType.connectionTimeout) {
-        throw Exception('Connection timeout. Please check your internet connection.');
+        throw Exception(
+          'Connection timeout. Please check your internet connection.',
+        );
       } else if (dioError.type == DioExceptionType.receiveTimeout) {
         throw Exception('Receive timeout. Server took too long to respond.');
       } else if (dioError.type == DioExceptionType.badResponse) {
         debugPrint('Bad response: ${dioError.response?.data}');
-        throw Exception('Server error: ${dioError.response?.data ?? 'Unknown error'}');
+        throw Exception(
+          'Server error: ${dioError.response?.data ?? 'Unknown error'}',
+        );
       } else if (dioError.type == DioExceptionType.unknown) {
         throw Exception('Unknown network error occurred.');
       } else {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
 import 'package:uber_clone/utils/app_assets_util.dart';
 
 class ConfirmRidePanel extends StatefulWidget {
@@ -136,8 +138,9 @@ class _ConfirmRidePanelState extends State<ConfirmRidePanel>
                 ),
               ),
               onPressed: () {
-                // handle cancel ride
-              },
+                // handle cancel ride]
+                context.read<RideFlowCubit>().resetFlow();
+                              },
               child: Text(
                 "Cancel Ride",
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(

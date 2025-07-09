@@ -4,11 +4,7 @@ import 'package:uber_clone/features/auth/data/captain_model/get_captain.dart';
 import 'package:uber_clone/features/homepage/data/ride_with_user_model.dart';
 
 /// Enum representing steps in the driver's ride flow
-enum DriverSideStep {
-  idle,
-  rideRequested,
-  forConfirmingOtp
-}
+enum DriverSideStep { idle, rideRequested, forConfirmingOtp, rideStarted }
 
 /// State class representing the current step and ride/captain data
 class DriverSideFlowState extends Equatable {
@@ -41,7 +37,7 @@ class DriverSideFlowState extends Equatable {
 /// Cubit class to manage driver side ride flow
 class DriverSideFlowCubit extends Cubit<DriverSideFlowState> {
   DriverSideFlowCubit()
-      : super(const DriverSideFlowState(step: DriverSideStep.idle));
+    : super(const DriverSideFlowState(step: DriverSideStep.idle));
 
   /// Set captain data once it's fetched
   void setCaptainData(GetCaptain captainData) {
@@ -50,24 +46,26 @@ class DriverSideFlowCubit extends Cubit<DriverSideFlowState> {
 
   /// Move to ride requested step
   void toRideRequested(RideWithUser rideData) {
-    emit(state.copyWith(
-      step: DriverSideStep.rideRequested,
-      rideData: rideData,
-    ));
+    emit(
+      state.copyWith(step: DriverSideStep.rideRequested, rideData: rideData),
+    );
   }
-  void toConfirmingOtp(){
-        emit(state.copyWith(
-      step: DriverSideStep.forConfirmingOtp,
 
-    ));
+  void toConfirmingOtp() {
+    emit(state.copyWith(step: DriverSideStep.forConfirmingOtp));
+  }
 
+  void toStartRide() {
+    emit(state.copyWith(step: DriverSideStep.rideStarted));
   }
 
   /// Reset to idle step while retaining captain data
   void reset() {
-    emit(DriverSideFlowState(
-      step: DriverSideStep.idle,
-      captainData: state.captainData,
-    ));
+    emit(
+      DriverSideFlowState(
+        step: DriverSideStep.idle,
+        captainData: state.captainData,
+      ),
+    );
   }
 }

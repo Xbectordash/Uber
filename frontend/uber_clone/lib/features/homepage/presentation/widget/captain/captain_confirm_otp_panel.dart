@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:uber_clone/features/homepage/domain/start_ride_repo.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/driver_side_flow_cubit.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_event.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/start_ride_bloc/start_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/start_ride_bloc/start_ride_event.dart';
 
@@ -17,7 +21,7 @@ class CaptainOtpStartPanel extends StatefulWidget {
     required this.pickupLocation,
     required this.dropoffLocation,
     required this.distance,
-    required this.rideId
+    required this.rideId,
   });
 
   @override
@@ -33,17 +37,39 @@ class _CaptainOtpStartPanelState extends State<CaptainOtpStartPanel> {
     super.dispose();
   }
 
-  void _handleOtpConfirm() {
+  void _handleOtpConfirm() async {
     final otp = _otpController.text.trim();
     if (otp.isNotEmpty) {
-      // Start ride logic here
-      debugPrint("befor calling start request");
-      BlocProvider.of<StartRideBloc>(context).add(
-        StartRideRequested(
-          rideId: widget.rideId,
-          otp: otp,
-        ),
+      // context.read<StartRideBloc>().add(
+      //   StartRideRequested(rideId: widget.rideId, otp: otp),
+      // );
+      final response = await StartRideRepo().startRide(
+        rideId: widget.rideId,
+        otp: otp,
       );
+      if ([200, 201].contains(response.statusCode)) {
+        context.read<DriverSideFlowCubit>().toStartRide();
+          debugPrint("calling fetch route with, picup: ${widget.pickupLocation} and pickup ${widget.dropoffLocation}");
+        BlocProvider.of<GetRoutesBloc>(context).add(
+        
+          FetchRoutesEvent(
+            origin:widget.pickupLocation,
+            destination: widget.dropoffLocation,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Failed to end ride: ${response.statusMessage ?? 'Unknown error'}',
+            ),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+
+      // 🔥 Directly update UI step (even if API fails)
     }
   }
 
@@ -81,9 +107,15 @@ class _CaptainOtpStartPanelState extends State<CaptainOtpStartPanel> {
           const SizedBox(height: 16),
           Column(
             children: [
-              RideInfoTile(icon: Icons.my_location, text: widget.pickupLocation),
+              RideInfoTile(
+                icon: Icons.my_location,
+                text: widget.pickupLocation,
+              ),
               const Divider(),
-              RideInfoTile(icon: Icons.location_on, text: widget.dropoffLocation),
+              RideInfoTile(
+                icon: Icons.location_on,
+                text: widget.dropoffLocation,
+              ),
               const Divider(),
               RideInfoTile(icon: Icons.directions_car, text: widget.distance),
             ],
@@ -94,8 +126,13 @@ class _CaptainOtpStartPanelState extends State<CaptainOtpStartPanel> {
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               labelText: "Enter OTP to Start Ride",
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 14,
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -113,9 +150,9 @@ class _CaptainOtpStartPanelState extends State<CaptainOtpStartPanel> {
               child: Text(
                 "Confirm OTP & Start Ride",
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -129,11 +166,7 @@ class RideInfoTile extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const RideInfoTile({
-    super.key,
-    required this.icon,
-    required this.text,
-  });
+  const RideInfoTile({super.key, required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {
