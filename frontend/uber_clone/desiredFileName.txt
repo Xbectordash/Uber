@@ -1,0 +1,45 @@
+{
+  "de": [
+    "languageLabel"
+  ],
+
+  "es": [
+    "languageLabel"
+  ],
+
+  "fa": [
+    "languageLabel"
+  ],
+
+  "fr": [
+    "languageLabel"
+  ],
+
+  "gu": [
+    "languageLabel"
+  ],
+
+  "hi": [
+    "languageLabel"
+  ],
+
+  "ja": [
+    "languageLabel"
+  ],
+
+  "ko": [
+    "languageLabel"
+  ],
+
+  "mr": [
+    "languageLabel"
+  ],
+
+  "ur": [
+    "languageLabel"
+  ],
+
+  "zh": [
+    "languageLabel"
+  ]
+}

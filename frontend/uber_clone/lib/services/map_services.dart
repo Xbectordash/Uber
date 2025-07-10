@@ -5,6 +5,8 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_state.dart';
+import 'package:uber_clone/features/settings/presentation/bloc/language/language_bloc.dart';
+import 'package:uber_clone/features/settings/presentation/bloc/language/language_state.dart';
 
 class MapServices extends StatefulWidget {
   const MapServices({super.key});
@@ -119,34 +121,75 @@ class _MapServicesState extends State<MapServices> {
             ),
           );
         }
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: SizedBox(
-            height: 300,
-            child: GoogleMap(
-              initialCameraPosition:
-                  _currentPosition ??
-                  const CameraPosition(
-                    target: LatLng(37.7749, -122.4194),
-                    zoom: 12,
-                  ),
-              onMapCreated: (controller) {
-                _mapController = controller;
-                if (_currentPosition != null) {
-                  _mapController.animateCamera(
-                    CameraUpdate.newCameraPosition(_currentPosition!),
-                  );
-                }
-              },
-              markers: markers,
-              polylines: polylines,
-              myLocationEnabled: _locationPermissionGranted,
-              myLocationButtonEnabled: true,
-              zoomControlsEnabled: true,
-            ),
-          ),
+        return BlocBuilder<LanguageBloc, LanguageState>(
+          builder: (context, languageState) {
+            // Get the current language code
+            final languageCode = languageState is LanguageLoaded 
+                ? languageState.languageCode 
+                : 'en';
+            // Create map style with language settings
+            final mapStyle = '''
+            {
+              "style": "default",
+              "settings": {
+                "language": "${_getMapLanguageCode(languageCode)}"
+              }
+            }
+            ''';
+            
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: SizedBox(
+                height: 300,
+                child: GoogleMap(
+                  initialCameraPosition:
+                      _currentPosition ??
+                      const CameraPosition(
+                        target: LatLng(37.7749, -122.4194),
+                        zoom: 12,
+                      ),
+                  style: mapStyle,
+                  onMapCreated: (controller) {
+                    _mapController = controller;
+                    if (_currentPosition != null) {
+                      _mapController.animateCamera(
+                        CameraUpdate.newCameraPosition(_currentPosition!),
+                      );
+                    }
+                  },
+                  markers: markers,
+                  polylines: polylines,
+                  myLocationEnabled: _locationPermissionGranted,
+                  myLocationButtonEnabled: true,
+                  zoomControlsEnabled: true,
+                ),
+              ),
+            );
+          },
+          buildWhen: (previous, current) => current is LanguageLoaded,
         );
       },
     );
+  }
+
+  // Helper method to convert locale code to Google Maps language code
+  String _getMapLanguageCode(String localeCode) {
+    // Google Maps uses slightly different language codes for some languages
+    final languageMap = {
+      'zh': 'zh-CN', // Chinese
+      'pt': 'pt-BR', // Portuguese
+      'en': 'en',    // English
+      'es': 'es',    // Spanish
+      'ar': 'ar',    // Arabic
+      'fr': 'fr',    // French
+      'de': 'de',    // German
+      'ja': 'ja',    // Japanese
+      'ru': 'ru',    // Russian
+      'hi': 'hi',    // Hindi
+      'ur': 'ur',    // Urdu
+      'fa': 'fa',    // Persian/Farsi
+    };
+
+    return languageMap[localeCode] ?? 'en'; // Default to English if locale not found
   }
 }

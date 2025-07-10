@@ -6,6 +6,7 @@ import 'package:uber_clone/features/auth/presentation/bloc/captain_auth_state.da
 import 'package:uber_clone/features/auth/presentation/widget/captain_signup/captain_signup_form.dart';
 import 'package:uber_clone/features/auth/presentation/widget/captain_signup/captain_signup_message.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/utils/constans/text_style_const.dart';
 
@@ -37,7 +38,7 @@ class CaptainSignupScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              StringConstant.createCaptainAccountString,
+              AppLocalizations.of(context)!.createCaptainAccountString,
               style: TextStyleConst.bodyLarge(context),
             ),
             centerTitle: true,

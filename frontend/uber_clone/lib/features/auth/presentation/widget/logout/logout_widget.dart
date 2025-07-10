@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
-import 'package:uber_clone/utils/constans/string_constant.dart';
 
 class LogoutWidget extends StatelessWidget {
   final VoidCallback onLogout;
@@ -8,6 +8,8 @@ class LogoutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
       child: ElevatedButton(
@@ -20,7 +22,7 @@ class LogoutWidget extends StatelessWidget {
           ),
         ),
         child: Text(
-          StringConstant.logout,
+          localizations.logout,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: ColorConst.onPrimary(context),
             fontWeight: FontWeight.bold,

@@ -5,6 +5,9 @@ import 'package:uber_clone/features/homepage/domain/end_ride_repo.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/driver_side_flow_cubit.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_event.dart';
+// import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
+import 'package:uber_clone/utils/app_assets_util.dart';
 
 class CaptainRideStartedScreen extends StatefulWidget {
   final String source;
@@ -28,6 +31,7 @@ class CaptainRideStartedScreen extends StatefulWidget {
 class _CaptainRideStartedScreenState extends State<CaptainRideStartedScreen> {
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     final textStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
       fontWeight: FontWeight.w800,
       color: Colors.black54,
@@ -42,7 +46,7 @@ class _CaptainRideStartedScreenState extends State<CaptainRideStartedScreen> {
             child: SizedBox(
               height: 80,
               child: Lottie.network(
-                'https://assets2.lottiefiles.com/packages/lf20_touohxv0.json',
+                AppAssetsUtil.rideAnimationUrl,
                 fit: BoxFit.contain,
               ),
             ),
@@ -50,7 +54,7 @@ class _CaptainRideStartedScreenState extends State<CaptainRideStartedScreen> {
           const SizedBox(height: 8),
           Center(
             child: Text(
-              "🚕 Ride Started",
+              localizations!.rideStarted,
               style: textStyle?.copyWith(
                 fontSize: 18,
                 color: Colors.green[700],
@@ -64,7 +68,7 @@ class _CaptainRideStartedScreenState extends State<CaptainRideStartedScreen> {
             children: [
               const Icon(Icons.location_on, color: Colors.red, size: 20),
               const SizedBox(width: 6),
-              Text("Source:", style: textStyle),
+              Text(localizations!.sourceLabel, style: textStyle),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
@@ -83,7 +87,7 @@ class _CaptainRideStartedScreenState extends State<CaptainRideStartedScreen> {
             children: [
               const Icon(Icons.flag, color: Colors.blue, size: 20),
               const SizedBox(width: 6),
-              Text("Destination:", style: textStyle),
+              Text(localizations!.destinationLabel, style: textStyle),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
@@ -103,7 +107,7 @@ class _CaptainRideStartedScreenState extends State<CaptainRideStartedScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Fare: ", style: textStyle),
+                Text(localizations!.fareLabel, style: textStyle),
                 const SizedBox(width: 4),
                 Text(
                   widget.fare,
@@ -131,7 +135,7 @@ class _CaptainRideStartedScreenState extends State<CaptainRideStartedScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        'Failed to end ride: ${response.statusMessage ?? 'Unknown error'}',
+                        '${localizations!.failedToEndRide}${response.statusMessage ?? localizations!.unknownError}'
                       ),
                       backgroundColor: Colors.red,
                       duration: const Duration(seconds: 3),
@@ -147,7 +151,7 @@ class _CaptainRideStartedScreenState extends State<CaptainRideStartedScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
               child: Text(
-                "Ride Completed",
+                localizations!.rideCompleted,
                 style: textStyle?.copyWith(fontSize: 16, color: Colors.white),
               ),
             ),

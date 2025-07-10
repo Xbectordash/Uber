@@ -7,6 +7,8 @@ import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/ge
 import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_event.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/start_ride_bloc/start_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/start_ride_bloc/start_ride_event.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
+// import 'package:uber_clone/utils/constans/string_constant.dart';
 
 class CaptainOtpStartPanel extends StatefulWidget {
   final String userName;
@@ -58,10 +60,11 @@ class _CaptainOtpStartPanelState extends State<CaptainOtpStartPanel> {
           ),
         );
       } else {
+        final localizations = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Failed to end ride: ${response.statusMessage ?? 'Unknown error'}',
+              '${localizations!.failedToEndRide}${response.statusMessage ?? localizations!.unknownError}',
             ),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
@@ -75,6 +78,7 @@ class _CaptainOtpStartPanelState extends State<CaptainOtpStartPanel> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: const BoxDecoration(
@@ -125,7 +129,7 @@ class _CaptainOtpStartPanelState extends State<CaptainOtpStartPanel> {
             controller: _otpController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              labelText: "Enter OTP to Start Ride",
+              labelText: localizations!.enterOtpToStartRide,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -148,7 +152,7 @@ class _CaptainOtpStartPanelState extends State<CaptainOtpStartPanel> {
                 ),
               ),
               child: Text(
-                "Confirm OTP & Start Ride",
+                localizations!.confirmOtpStartRide,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

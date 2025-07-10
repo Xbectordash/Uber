@@ -1,6 +1,6 @@
 class ApiEndpoints {
   ApiEndpoints._();
-  static const String baseUrl = 'http://192.168.0.113:4000';
+  static const String baseUrl = 'http://192.168.0.121:4000';
   static const String createUserEndpoint = '/api/users/register/';
   static const String loginUserEndpoint = '/api/users/login/';
   static const String getUserEndpoint = '/api/users/profile/';

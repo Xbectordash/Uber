@@ -8,6 +8,7 @@ import 'package:uber_clone/features/homepage/presentation/screens/user_home.dart
 import 'package:uber_clone/features/homepage/presentation/screens/captain_home.dart';
 import 'package:uber_clone/features/landingpage/presentation/screens/landing_page.dart';
 import 'package:uber_clone/features/auth/presentation/screens/captain_signup_screen.dart';
+import 'package:uber_clone/features/settings/presentation/screens/language_screen.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 
 class AppRouters {
@@ -44,15 +45,20 @@ class AppRouters {
         path: '/auth/signup',
         builder: (context, state) => const SignupScreen(),
       ),
-      GoRoute(
-        name: StringConstant.updateUserRouteName,
-        path: '/auth/update',
-        builder: (context, state) => const UpdateUserScreen(),
-      ),
+      // GoRoute(
+      //   name: StringConstant.updateUserRouteName,
+      //   path: '/auth/update',
+      //   builder: (context, state) => const UpdateUserScreen(),
+      // ),
       GoRoute(
         name: StringConstant.captainSignupRouteName,
         path: '/auth/captain/signup',
         builder: (context, state) => const CaptainSignupScreen(),
+      ),
+      GoRoute(
+        name: StringConstant.languageRouteName,
+        path: '/language',
+        builder: (context, state) => const LanguageSelectionScreen(),
       ),
     ],
   );

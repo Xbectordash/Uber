@@ -6,6 +6,7 @@ import 'package:uber_clone/features/auth/data/captain_model/signup_captain_model
 import 'package:uber_clone/utils/constans/color_const.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/utils/global_validator.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class CaptainSignupForm extends StatefulWidget {
   const CaptainSignupForm({super.key});
@@ -32,6 +33,7 @@ class _CaptainSignupFormState extends State<CaptainSignupForm> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Form(
       key: _formKey,
       child: Column(
@@ -42,18 +44,18 @@ class _CaptainSignupFormState extends State<CaptainSignupForm> {
               Expanded(
                 child: _CustomTextField(
                   controller: firstNameController,
-                  labelText: StringConstant.firstName,
+                  labelText: localizations!.firstName,
                   obscureText: false,
-                  validator: GlobalValidator.validateFirstName,
+                  validator: (value) => GlobalValidator.validateFirstName(value,localizations),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: _CustomTextField(
                   controller: lastNameController,
-                  labelText: StringConstant.lastName,
+                  labelText: localizations!.lastName,
                   obscureText: false,
-                  validator: GlobalValidator.validateLastName,
+                  validator: (value) => GlobalValidator.validateLastName(value,localizations),
                 ),
               ),
             ],
@@ -61,10 +63,10 @@ class _CaptainSignupFormState extends State<CaptainSignupForm> {
           const SizedBox(height: 8),
           _CustomTextField(
             controller: emailController,
-            labelText: StringConstant.emailString,
+            labelText: localizations!.emailString,
             obscureText: false,
             keyboardType: TextInputType.emailAddress,
-            validator: GlobalValidator.validateEmail,
+            validator: (value) => GlobalValidator.validateEmail(value,localizations),
           ),
           const SizedBox(height: 16),
           _CustomTextField(
@@ -77,7 +79,7 @@ class _CaptainSignupFormState extends State<CaptainSignupForm> {
                 _obscurePassword = !_obscurePassword;
               });
             },
-            validator: GlobalValidator.validatePassword,
+            validator: (value) => GlobalValidator.validatePassword(value,localizations),
           ),
           const SizedBox(height: 16),
           _CustomTextField(
@@ -93,6 +95,7 @@ class _CaptainSignupFormState extends State<CaptainSignupForm> {
             validator: (value) => GlobalValidator.validateConfirmPassword(
               passwordController.text,
               value,
+              localizations,
             ),
           ),
           const SizedBox(height: 16),
@@ -100,14 +103,14 @@ class _CaptainSignupFormState extends State<CaptainSignupForm> {
             controller: vehicleColorController,
             labelText: StringConstant.vehicleColor,
             obscureText: false,
-            validator: GlobalValidator.validateVehicleColor,
+            validator: (value) => GlobalValidator.validateVehicleColor(value,localizations),
           ),
           const SizedBox(height: 8),
           _CustomTextField(
             controller: vehiclePlateController,
             labelText: StringConstant.vehiclePlate,
             obscureText: false,
-            validator: GlobalValidator.validateVehiclePlate,
+            validator: (value) => GlobalValidator.validateVehiclePlate(value,localizations),
           ),
           const SizedBox(height: 8),
           _CustomTextField(
@@ -115,14 +118,14 @@ class _CaptainSignupFormState extends State<CaptainSignupForm> {
             labelText: StringConstant.vehicleCapacity,
             obscureText: false,
             keyboardType: TextInputType.number,
-            validator: GlobalValidator.validateVehicleCapacity,
+            validator: (value) => GlobalValidator.validateVehicleCapacity(value,localizations),
           ),
           const SizedBox(height: 8),
           _CustomTextField(
             controller: vehicleTypeController,
             labelText: StringConstant.vehicleType,
             obscureText: false,
-            validator: GlobalValidator.validateVehicleType,
+            validator: (value) => GlobalValidator.validateVehicleType(value,localizations),
           ),
           const SizedBox(height: 24),
           SubmitButton(

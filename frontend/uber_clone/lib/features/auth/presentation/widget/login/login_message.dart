@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
+import 'package:uber_clone/utils/constans/color_const.dart';
 
 class LoginMessage extends StatelessWidget {
   final bool isUser;
@@ -7,12 +8,14 @@ class LoginMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 50, 8, 8),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.tertiary,
+          color: ColorConst.tertiary(context),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -27,10 +30,10 @@ class LoginMessage extends StatelessWidget {
         child: Center(
           child: Text(
             isUser
-                ? StringConstant.welcomePassenger
-                : StringConstant.welcomeCaptain,
+                ? localizations.welcomePassenger
+                : localizations.welcomeCaptain,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: ColorConst.onPrimary(context),
               fontStyle: FontStyle.italic,
               fontWeight: FontWeight.w900,
             ),

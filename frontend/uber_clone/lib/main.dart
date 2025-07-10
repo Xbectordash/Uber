@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uber_clone/app.dart';
 import 'package:uber_clone/cofing/routers/routers.dart';
 import 'package:uber_clone/cofing/themes/app_theme.dart';
@@ -16,8 +17,14 @@ import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/ge
 import 'package:uber_clone/features/homepage/presentation/bloc/start_ride_bloc/start_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/sliding_panel.dart';
-import 'package:uber_clone/utils/screen_viewer_util.dart';
+import 'package:uber_clone/features/settings/presentation/bloc/language/language_bloc.dart';
+import 'package:uber_clone/features/settings/presentation/bloc/language/language_event.dart';
+import 'package:uber_clone/features/settings/presentation/bloc/language/language_state.dart';
+
 import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
+
 
 
 void main() async {
@@ -36,6 +43,7 @@ void main() async {
         BlocProvider(create: (context) => RideFlowCubit()),
         BlocProvider(create: (context) => DriverSideFlowCubit()),
         BlocProvider(create: (context) => GetRoutesBloc()),
+        BlocProvider(create: (context) => LanguageBloc(FlutterSecureStorage())..add(LoadLanguageEvent(languageCode: 'en'))),
       ],
       child: const MyApp(),
     ),
@@ -46,16 +54,29 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return 
+    BlocBuilder<LanguageBloc, LanguageState>(
+      builder: (context, state) {
+        Locale locale = const Locale('en'); // Default
+
+        if (state is LanguageLoaded) {
+          locale = Locale(state.languageCode);
+        }
+        return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: AppRouters.router,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+    supportedLocales: AppLocalizations.supportedLocales,
+    locale:locale,
       theme: AppTheme.theme,
     );
+      },
+    );
 
-    // return MaterialApp(
-    //   debugShowCheckedModeBanner: false,
-    //   theme: AppTheme.theme,
-    //   home: SlidingPanel(),
-    // );
   }
 }

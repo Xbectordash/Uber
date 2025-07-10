@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
 import 'package:uber_clone/utils/app_assets_util.dart';
+// import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class ConfirmRidePanel extends StatefulWidget {
   final String pickupLocation;
@@ -72,6 +74,7 @@ class _ConfirmRidePanelState extends State<ConfirmRidePanel>
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: const BoxDecoration(
@@ -81,9 +84,9 @@ class _ConfirmRidePanelState extends State<ConfirmRidePanel>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            'Waiting for Driver...',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(
+            localizations!.waitingForDriver,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           Row(
@@ -142,7 +145,7 @@ class _ConfirmRidePanelState extends State<ConfirmRidePanel>
                 context.read<RideFlowCubit>().resetFlow();
                               },
               child: Text(
-                "Cancel Ride",
+                  localizations!.cancelRide,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

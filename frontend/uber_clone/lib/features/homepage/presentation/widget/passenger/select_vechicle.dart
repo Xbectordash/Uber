@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uber_clone/utils/app_assets_util.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 
+
 class ChooseVehicleTile extends StatefulWidget {
   final String vehicleType;
   final int peopleCount;
@@ -39,11 +40,11 @@ class _ChooseVehicleTileState extends State<ChooseVehicleTile> {
   String get _title {
     switch (widget.vehicleType.toLowerCase()) {
       case StringConstant.carType:
-        return 'Car';
+        return StringConstant.carName;
       case StringConstant.autoType:
-        return 'Auto';
+        return StringConstant.autoName;
       case StringConstant.motorcycleType:
-        return 'Motorcycle';
+        return StringConstant.motorcycleName;
       default:
         return widget.vehicleType[0].toUpperCase() + widget.vehicleType.substring(1);
     }

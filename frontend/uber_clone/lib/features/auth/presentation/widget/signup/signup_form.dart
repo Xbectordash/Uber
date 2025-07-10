@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
-import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_auth_bloc.dart';
 import 'package:uber_clone/features/auth/presentation/bloc/user_auth_event.dart';
 import 'package:uber_clone/features/auth/data/user_model/signup_user_model.dart';
 import 'package:uber_clone/utils/global_validator.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class SignupForm extends StatefulWidget {
   SignupForm({super.key});
@@ -27,6 +27,7 @@ class _SignupFormState extends State<SignupForm> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Form(
       key: _formKey,
       child: Column(
@@ -37,14 +38,14 @@ class _SignupFormState extends State<SignupForm> {
               Expanded(
                 child: _CustomTextField(
                   controller: firstNameController,
-                  labelText: StringConstant.firstName,
+                  labelText: localizations!.firstName,
                   obscureText: false,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return StringConstant.firstNameRequired;
+                      return localizations.firstNameRequired;
                     }
                     if (value.trim().length < 2) {
-                      return StringConstant.firstNameMin;
+                      return localizations.firstNameMin;
                     }
                     return null;
                   },
@@ -54,14 +55,14 @@ class _SignupFormState extends State<SignupForm> {
               Expanded(
                 child: _CustomTextField(
                   controller: lastNameController,
-                  labelText: StringConstant.lastName,
+                  labelText: localizations!.lastName,
                   obscureText: false,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return StringConstant.lastNameRequired;
+                      return localizations.lastNameRequired;
                     }
                     if (value.trim().length < 2) {
-                      return StringConstant.lastNameMin;
+                      return localizations.lastNameMin;
                     }
                     return null;
                   },
@@ -72,15 +73,15 @@ class _SignupFormState extends State<SignupForm> {
           const SizedBox(height: 8),
           _CustomTextField(
             controller: emailController,
-            labelText: StringConstant.emailString,
+            labelText: localizations!.emailString,
             obscureText: false,
             keyboardType: TextInputType.emailAddress,
-            validator: GlobalValidator.validateEmail,
+            validator: (value) => GlobalValidator.validateEmail(value,localizations),
           ),
           const SizedBox(height: 16),
           _CustomTextField(
             controller: passwordController,
-            labelText: StringConstant.passwordString,
+            labelText: localizations!.passwordString,
             obscureText: _obscurePassword,
             isPassword: true,
             onToggleObscure: () {
@@ -88,12 +89,12 @@ class _SignupFormState extends State<SignupForm> {
                 _obscurePassword = !_obscurePassword;
               });
             },
-            validator: GlobalValidator.validatePassword,
+            validator:  (value) => GlobalValidator.validatePassword(value,localizations),
           ),
           const SizedBox(height: 16),
           _CustomTextField(
             controller: confirmPasswordController,
-            labelText: StringConstant.confirmPasswordString,
+            labelText: localizations!.confirmPasswordString,
             obscureText: _obscureConfirmPassword,
             isPassword: true,
             onToggleObscure: () {
@@ -103,7 +104,8 @@ class _SignupFormState extends State<SignupForm> {
             },
             validator: (value) => GlobalValidator.validateConfirmPassword(
               passwordController.text,
-              value,
+              value,  
+              localizations,
             ),
           ),
           const SizedBox(height: 24),
@@ -153,6 +155,7 @@ class _CustomTextField extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -172,7 +175,7 @@ class _CustomTextField extends StatelessWidget {
             keyboardType: keyboardType,
             validator: validator,
             decoration: InputDecoration(
-              hintText: '${StringConstant.enterYour} $labelText',
+              hintText: '${localizations!.enterYour} $labelText',
               hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.grey,
                 fontStyle: FontStyle.italic,
@@ -224,16 +227,17 @@ class _CustomTextField extends StatelessWidget {
 
 class SubmitButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final String text;
+
 
   const SubmitButton({
     super.key,
     required this.onPressed,
-    this.text = StringConstant.createAccountString,
+
   });
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
       child: ElevatedButton(
@@ -246,7 +250,7 @@ class SubmitButton extends StatelessWidget {
           ),
         ),
         child: Text(
-          text,
+          localizations!.createAccountString  ,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: ColorConst.onPrimary(context),
             fontWeight: FontWeight.bold,

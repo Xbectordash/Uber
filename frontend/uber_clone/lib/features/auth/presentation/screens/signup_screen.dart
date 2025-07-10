@@ -6,6 +6,7 @@ import 'package:uber_clone/features/auth/presentation/bloc/user_auth_state.dart'
 import 'package:uber_clone/features/auth/presentation/widget/signup/signup_form.dart';
 import 'package:uber_clone/features/auth/presentation/widget/signup/signup_message.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/utils/constans/text_style_const.dart';
 
@@ -37,7 +38,7 @@ class SignupScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text(
-              StringConstant.createAccountString,
+              AppLocalizations.of(context)!.createAccountString,
               style: TextStyleConst.bodyLarge(context),
             ),
             centerTitle: true,

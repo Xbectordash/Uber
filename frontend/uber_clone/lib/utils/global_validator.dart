@@ -1,23 +1,26 @@
 import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class GlobalValidator {
-  static String? validateEmail(String? value) {
+  
+  static String? validateEmail(String? value,AppLocalizations localizations) {
+
     if (value == null || value.trim().isEmpty) {
-      return StringConstant.emailRequired;
+      return localizations.emailRequired;
     }
     final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+');
     if (!emailRegex.hasMatch(value.trim())) {
-      return StringConstant.emailInvalid;
+      return localizations.emailInvalid;
     }
     return null;
   }
 
-  static String? validatePassword(String? value) {
+  static String? validatePassword(String? value,AppLocalizations localizations) {
     if (value == null || value.isEmpty) {
-      return StringConstant.passwordRequired;
+      return localizations.passwordRequired;
     }
     if (value.length < 6) {
-      return StringConstant.passwordMin;
+      return localizations.passwordMin;
     }
     return null;
   }
@@ -25,59 +28,59 @@ class GlobalValidator {
   static String? validateConfirmPassword(
     String? password,
     String? confirmPassword,
+    AppLocalizations localizations,
   ) {
     if (confirmPassword == null || confirmPassword.isEmpty) {
-      return StringConstant.confirmPasswordRequired;
+      return localizations.confirmPasswordRequired;
     }
     if (password != confirmPassword) {
-      return StringConstant.passwordsDoNotMatch;
+      return localizations.passwordsDoNotMatch;
     }
     return null;
   }
 
-  static String? validateFirstName(String? value) {
+  static String? validateFirstName(String? value,AppLocalizations localizations) {
     if (value == null || value.trim().isEmpty) {
-      return StringConstant.firstNameRequired;
+      return localizations.firstNameRequired;
     }
     return null;
   }
 
-  static String? validateLastName(String? value) {
+  static String? validateLastName(String? value,AppLocalizations localizations) {
     if (value == null || value.trim().isEmpty) {
-      return StringConstant.lastNameRequired;
+      return localizations.lastNameRequired;
     }
     return null;
   }
 
-  static String? validateVehicleColor(String? value) {
+  static String? validateVehicleColor(String? value,AppLocalizations localizations) {
     if (value == null || value.trim().isEmpty) {
-      return StringConstant.vehicleColorRequired;
+      return localizations.vehicleColorRequired;
     }
     return null;
   }
 
-  static String? validateVehiclePlate(String? value) {
+  static String? validateVehiclePlate(String? value,AppLocalizations localizations) {
     if (value == null || value.trim().isEmpty) {
-      return StringConstant.vehiclePlateRequired;
+      return localizations.vehiclePlateRequired;
     }
     return null;
   }
 
-  static String? validateVehicleCapacity(String? value) {
+  static String? validateVehicleCapacity(String? value,AppLocalizations localizations) {
     if (value == null || value.trim().isEmpty) {
-      return StringConstant.vehicleCapacityRequired;
+      return localizations.vehicleCapacityRequired;
     }
     final intValue = int.tryParse(value.trim());
     if (intValue == null || intValue <= 0) {
-      return StringConstant.vehicleCapacityInvalid ??
-          'Invalid vehicle capacity';
+      return localizations.vehicleCapacityInvalid;
     }
     return null;
   }
 
-  static String? validateVehicleType(String? value) {
+  static String? validateVehicleType(String? value,AppLocalizations localizations) {
     if (value == null || value.trim().isEmpty) {
-      return StringConstant.vehicleTypeRequired;
+      return localizations.vehicleTypeRequired;
     }
     return null;
   }

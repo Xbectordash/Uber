@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:uber_clone/features/auth/presentation/widget/login/login_message.dart';
 import 'package:uber_clone/features/auth/presentation/widget/login/login_form.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
-import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 import 'package:uber_clone/utils/constans/text_style_const.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -16,7 +16,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          StringConstant.loginString,
+          AppLocalizations.of(context)!.loginString,
           style: TextStyleConst.bodyLarge(context),
         ),
         centerTitle: true,

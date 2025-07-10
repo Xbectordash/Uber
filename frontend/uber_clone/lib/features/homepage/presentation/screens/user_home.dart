@@ -11,6 +11,7 @@ import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/sliding_panel.dart';
 import 'package:uber_clone/features/auth/domain/user_auth_repository.dart';
 import 'package:uber_clone/services/user_socket_servieces.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({super.key});
@@ -43,19 +44,20 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Navigator.of(context).canPop()
+        leading: context.canPop()
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),
                 color: ColorConst.primary(context),
-                onPressed: () => Navigator.of(context).maybePop(),
+                onPressed: () => context.pop(),
               )
             : null,
         title: Text(
-          StringConstant.appName,
+          localizations!.appName,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: ColorConst.primary(context),
                 fontWeight: FontWeight.bold,
@@ -74,9 +76,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
+                value: 'language',
+                child: Text(localizations.selectLanguage),
+                onTap: () => context.pushNamed(StringConstant.languageRouteName),
+              ),
+              PopupMenuItem<String>(
                 value: 'logout',
-                child: Text('Log Out'),
+                child: Text(localizations.logout),
               ),
             ],
           ),
@@ -99,7 +106,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
             return SlidingPanel();
           } else if (state is UserFetchError) {
-            return Center(child: Text('Error: ${state.message}'));
+            return Center(child: Text(localizations.errorPrefix + state.message));
           } else {
             return const SizedBox.shrink();
           }

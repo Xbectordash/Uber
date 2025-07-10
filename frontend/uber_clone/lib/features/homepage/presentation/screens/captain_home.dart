@@ -12,6 +12,7 @@ import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/services/captain_socket_servieces.dart';
 import 'package:uber_clone/features/auth/domain/captain_auth_repository.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class CaptainHomeScreen extends StatefulWidget {
   const CaptainHomeScreen({super.key});
@@ -57,6 +58,7 @@ class _CaptainHomeScreenState extends State<CaptainHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -69,7 +71,7 @@ class _CaptainHomeScreenState extends State<CaptainHomeScreen> {
               )
             : null,
         title: Text(
-          'Captain Home',
+          localizations!.appName,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: ColorConst.primary(context),
                 fontWeight: FontWeight.bold,
@@ -88,9 +90,14 @@ class _CaptainHomeScreenState extends State<CaptainHomeScreen> {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
+                value: 'language',
+                child: Text(localizations.selectLanguage),
+                onTap: () => Navigator.pushNamed(context, StringConstant.languageRouteName),
+              ),
+              PopupMenuItem<String>(
                 value: 'logout',
-                child: Text('Log Out'),
+                child: Text(localizations.logout),
               ),
             ],
           ),

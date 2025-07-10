@@ -5,8 +5,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_event.bloc.dart';
-import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_bloc.dart';
-import 'package:uber_clone/features/homepage/presentation/bloc/get_route_bloc/get_route_event.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_bloc.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_event.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_state.dart';
@@ -14,6 +12,8 @@ import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare
 import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare_event.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
 import 'package:uber_clone/features/homepage/data/create_ride_model.dart';
+// import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class SearchPanelWidget extends StatefulWidget {
   final FocusNode? pickupFocusNode;
@@ -114,6 +114,7 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -126,7 +127,7 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
             color: Colors.black54,
           ),
           decoration: InputDecoration(
-            hintText: 'Pickup location',
+            hintText: localizations!.pickupHint,
             hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: Colors.black54,
@@ -149,7 +150,7 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
             color: Colors.black54,
           ),
           decoration: InputDecoration(
-            hintText: 'Where to?',
+            hintText: localizations.destinationHint,
             hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: Colors.black54,
@@ -167,14 +168,29 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
         BlocBuilder<SuggestionBloc, SuggestionState>(
           builder: (context, state) {
             if (state is SuggestionInitialState) {
-              return Center(child: Text('Start typing to see suggestions.'));
+              return Center(child: Text(localizations.startTyping));
             } else if (state is SuggestionLoadingState) {
               return const Center(child: CircularProgressIndicator());
             } else if (state is SuggestionLoadedState) {
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: state.suggestions.length,
-                itemBuilder: (context, index) {
+              return Container(
+                constraints: const BoxConstraints(maxHeight: 300), // Maximum height for the suggestion list
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: state.suggestions.length,
+                  itemBuilder: (context, index) {
                   final suggestion = state.suggestions[index];
                   return ListTile(
                     title: Text(
@@ -264,12 +280,13 @@ class _SearchPanelWidgetState extends State<SearchPanelWidget> {
                       }
                     },
                   );
-                },
+                  },
+                ),
               );
             } else if (state is SuggestionEmptyState) {
-              return Center(child: Text('No suggestions found.'));
+              return Center(child: Text(localizations.noSuggestions));
             } else if (state is SuggestionInitialState) {
-              return Center(child: Text('Start typing to see suggestions.'));
+              return Center(child: Text(localizations.startTyping));
             } else if (state is SuggestionErrorState) {
               return Center(child: Text('Error: \\${state.error}'));
             }

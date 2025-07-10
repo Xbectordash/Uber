@@ -68,6 +68,7 @@ class StringConstant {
   static const String captainSignupRouteName = "captain-signup";
   static const String landingRouteName = "landing-screen";
   static const String appStartRouteName = "app-start-screen";
+  static const String languageRouteName = "language-screen";
 
 
   // Auth - Login/Signup prompt
@@ -99,4 +100,53 @@ class StringConstant {
   static const String carType = 'car';
   static const String autoType = 'auto';
   static const String motorcycleType = 'motorcycle';
+
+  // Captain OTP Panel
+  static const String failedToEndRide = 'Failed to end ride: ';
+  static const String unknownError = 'Unknown error';
+  static const String enterOtpToStartRide = 'Enter OTP to Start Ride';
+  static const String confirmOtpStartRide = 'Confirm OTP & Start Ride';
+
+  // Captain Info Panel
+  static const String activeStatus = 'active';
+  static const String colorLabel = 'Color: ';
+  static const String typeLabel = 'Type: ';
+  static const String plateLabel = 'Plate: ';
+
+  // Captain Ride Started Screen
+  static const String rideStarted = '🚕 Ride Started';
+  static const String sourceLabel = 'Source:';
+  static const String destinationLabel = 'Destination:';
+  static const String fareLabel = 'Fare: ';
+  static const String rideCompleted = 'Ride Completed';
+
+  // Ride With Driver Panel
+  static const String driverLabel = 'Driver: ';
+  static const String vehicleNoLabel = 'Vehicle No: ';
+  static const String vehicleLabel = 'Vehicle: ';
+  static const String otpLabel = 'OTP: ';
+  static const String makePayment = 'Make Payment';
+
+  // Create Ride Panel
+  static const String waitingForDriver = 'Waiting for Driver...';
+  static const String cancelRide = 'Cancel Ride';
+
+  // Search Panel Widget
+  static const String startTypingHint = 'Start typing to see suggestions.';
+  static const String pickupHint = 'Pickup location';
+  static const String destinationHint = 'Where to?';
+
+  // Vehicle Type Names
+  static const String carName = 'Car';
+  static const String autoName = 'Auto';
+  static const String motorcycleName = 'Motorcycle';
+
+  // User Content Panel
+  static const String rideCreated = 'Ride Created!';
+  static const String rideIdLabel = 'Ride ID: ';
+  static const String panelHandleTapped = 'Panel handle tapped';
+
+  // Vehicle Selection Panel
+  static const String selectVehicle = 'Please select a vehicle';
+  static const String errorPrefix = 'Error: ';
 }

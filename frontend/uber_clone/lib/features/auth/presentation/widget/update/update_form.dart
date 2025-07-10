@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
-import 'package:uber_clone/utils/constans/string_constant.dart';
 
 class UpdateForm extends StatefulWidget {
   const UpdateForm({super.key});
@@ -17,6 +17,8 @@ class _UpdateFormState extends State<UpdateForm> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return SingleChildScrollView(
       padding: const EdgeInsets.only(bottom: 24),
       child: Form(
@@ -28,11 +30,12 @@ class _UpdateFormState extends State<UpdateForm> {
               children: [
                 Expanded(
                   child: _CustomTextField(
+                    localizations: localizations,
                     controller: firstNameController,
-                    labelText: StringConstant.firstName,
+                    labelText: localizations.firstName,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return StringConstant.firstNameRequired;
+                        return localizations.firstNameRequired;
                       }
                       return null;
                     },
@@ -41,11 +44,12 @@ class _UpdateFormState extends State<UpdateForm> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _CustomTextField(
+                    localizations: localizations,
                     controller: lastNameController,
-                    labelText: StringConstant.lastName,
+                    labelText: localizations.lastName,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return StringConstant.lastNameRequired;
+                        return localizations.lastNameRequired;
                       }
                       return null;
                     },
@@ -55,16 +59,16 @@ class _UpdateFormState extends State<UpdateForm> {
             ),
             const SizedBox(height: 16),
             _CustomTextField(
+              localizations: localizations,
               controller: emailController,
-              labelText: StringConstant.emailString,
+              labelText: localizations.emailString,
               keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return StringConstant.emailRequired;
+                  return localizations.emailRequired;
                 }
-                final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+');
-                if (!emailRegex.hasMatch(value.trim())) {
-                  return StringConstant.emailInvalid;
+                if (!value.contains('@')) {
+                  return localizations.emailInvalid;
                 }
                 return null;
               },
@@ -77,9 +81,9 @@ class _UpdateFormState extends State<UpdateForm> {
               ),
               child: ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
+                  if (_formKey.currentState!.validate()) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(StringConstant.profileUpdated)),
+                      SnackBar(content: Text(localizations.profileUpdated)),
                     );
                   }
                 },
@@ -91,7 +95,7 @@ class _UpdateFormState extends State<UpdateForm> {
                   ),
                 ),
                 child: Text(
-                  StringConstant.update,
+                  localizations.update,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -111,12 +115,14 @@ class _CustomTextField extends StatelessWidget {
   final String labelText;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final AppLocalizations localizations;
 
   const _CustomTextField({
     required this.controller,
     required this.labelText,
     this.keyboardType,
     this.validator,
+    required this.localizations,
   });
   @override
   Widget build(BuildContext context) {
@@ -138,7 +144,7 @@ class _CustomTextField extends StatelessWidget {
             keyboardType: keyboardType,
             validator: validator,
             decoration: InputDecoration(
-              hintText: '${StringConstant.enterYour} $labelText',
+              hintText: '${localizations.enterYour} $labelText',
               hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.grey,
                 fontStyle: FontStyle.italic,

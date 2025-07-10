@@ -10,7 +10,8 @@ import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare
 import 'package:uber_clone/features/homepage/presentation/widget/passenger/select_vechicle.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/passenger/search_panel_widget.dart';
 import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
-import 'package:uber_clone/utils/constans/string_constant.dart';
+// import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class VehicleSelectionPanel extends StatelessWidget {
   final FocusNode pickupFocus;
@@ -39,6 +40,7 @@ class VehicleSelectionPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Expanded(
       child: BlocBuilder<GetDistanceTimeBloc, GetDistanceTimeState>(
         builder: (context, distanceState) {
@@ -56,7 +58,7 @@ class VehicleSelectionPanel extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Please select a vehicle',
+                          localizations!.selectVehicle,
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -64,29 +66,29 @@ class VehicleSelectionPanel extends StatelessWidget {
                       ),
                     ),
                     ChooseVehicleTile(
-                      vehicleType: StringConstant.carType,
+                      vehicleType: localizations!.carType,
                       price: fare?.car?.toString() ?? '-',
                       time: duration,
-                      onTap: () => _onVehicleSelected(context, StringConstant.carType, fare?.car?.toString()),
+                      onTap: () => _onVehicleSelected(context, localizations!.carType, fare?.car?.toString()),
                     ),
                     ChooseVehicleTile(
-                      vehicleType: StringConstant.autoType,
+                      vehicleType: localizations!.autoType,
                       price: fare?.auto?.toString() ?? '-',
                       time: duration,
-                      onTap: () => _onVehicleSelected(context, StringConstant.autoType, fare?.auto?.toString()),
+                      onTap: () => _onVehicleSelected(context, localizations!.autoType, fare?.auto?.toString()),
                     ),
                     ChooseVehicleTile(
-                      vehicleType: StringConstant.motorcycleType,
+                      vehicleType: localizations!.motorcycleType,
                       price: fare?.moto?.toString() ?? '-',
                       time: duration,
-                      onTap: () => _onVehicleSelected(context, StringConstant.motorcycleType, fare?.moto?.toString()),
+                      onTap: () => _onVehicleSelected(context, localizations!.motorcycleType, fare?.moto?.toString()),
                     ),
                   ],
                 );
               } else if (distanceState is ErrorGetDistanceTimeState) {
-                return Center(child: Text('Error: \\${distanceState.message}'));
+                return Center(child: Text('${localizations!.errorPrefix}${distanceState.message}'));
               } else if (fareState is ErrorGetFareState) {
-                return Center(child: Text('Error: \\${fareState.message}'));
+                return Center(child: Text('${localizations!.errorPrefix}${fareState.message}'));
               } else if (distanceState is IntialGetDistanceTimeState) {
                 return SearchPanelWidget(
                   pickupFocusNode: pickupFocus,

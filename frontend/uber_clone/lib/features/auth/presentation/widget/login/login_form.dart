@@ -11,6 +11,7 @@ import 'package:uber_clone/features/auth/presentation/bloc/captain_auth_event.da
 import 'package:uber_clone/features/auth/presentation/bloc/captain_auth_state.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
 import 'package:uber_clone/utils/global_validator.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class LoginForm extends StatefulWidget {
   final bool isUser;
@@ -27,6 +28,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return MultiBlocListener(
       listeners: [
         BlocListener<UserAuthBloc, UserAuthState>(
@@ -61,17 +63,17 @@ class _LoginFormState extends State<LoginForm> {
             children: [
               _CustomTextField(
                 controller: emailController,
-                labelText: StringConstant.emailString,
+                labelText: localizations!.emailString,
                 obscureText: false,
                 keyboardType: TextInputType.emailAddress,
-                validator: GlobalValidator.validateEmail,
+                validator: (value) => GlobalValidator.validateEmail(value,localizations),
               ),
               const SizedBox(height: 16),
               _CustomTextField(
                 controller: passwordController,
-                labelText: StringConstant.passwordString,
+                labelText: localizations!.passwordString,
                 obscureText: true,
-                validator: GlobalValidator.validatePassword,
+                validator: (value) => GlobalValidator.validatePassword(value,localizations),
               ),
               const SizedBox(height: 24),
               SubmitButton(
@@ -112,14 +114,13 @@ class _LoginFormState extends State<LoginForm> {
                     }
                   }
                 },
-                text: StringConstant.loginString,
               ),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    StringConstant.dontHaveAccount,
+                    localizations!.dontHaveAccount,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   TextButton(
@@ -136,7 +137,7 @@ class _LoginFormState extends State<LoginForm> {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: Text(
-                      StringConstant.createAccountString,
+                      localizations!.createAccountString,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         decoration: TextDecoration.underline,
                         color: Theme.of(context).colorScheme.primary,
@@ -184,6 +185,7 @@ class _CustomTextFieldState extends State<_CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -203,7 +205,7 @@ class _CustomTextFieldState extends State<_CustomTextField> {
             keyboardType: widget.keyboardType,
             validator: widget.validator,
             decoration: InputDecoration(
-              hintText: '${StringConstant.enterYour} ${widget.labelText}',
+              hintText: '${localizations!.enterYour} ${widget.labelText}',
               hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.grey,
                 fontStyle: FontStyle.italic,
@@ -259,16 +261,16 @@ class _CustomTextFieldState extends State<_CustomTextField> {
 
 class SubmitButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final String text;
+
 
   const SubmitButton({
     super.key,
     required this.onPressed,
-    this.text = StringConstant.loginString,
   });
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
       child: ElevatedButton(
@@ -281,7 +283,7 @@ class SubmitButton extends StatelessWidget {
           ),
         ),
         child: Text(
-          text,
+          localizations!.loginString,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: Theme.of(context).colorScheme.onPrimary,
             fontWeight: FontWeight.bold,

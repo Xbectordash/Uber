@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:uber_clone/utils/app_assets_util.dart';
+// import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class RideWithDriverPannel extends StatelessWidget {
   final String driverName;
@@ -24,6 +26,7 @@ class RideWithDriverPannel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
@@ -40,16 +43,16 @@ class RideWithDriverPannel extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Driver: $driverName",
+                    Text("${localizations!.driverLabel}$driverName",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         )),
                     const SizedBox(height: 4),
-                    Text("Vehicle No: $vehicleNumber",
+                    Text("${localizations!.vehicleNoLabel}$vehicleNumber",
                         style: const TextStyle(fontSize: 14)),
                     const SizedBox(height: 4),
-                    Text("Vehicle: $vehicleName",
+                    Text("${localizations!.vehicleLabel}$vehicleName",
                         style: const TextStyle(fontSize: 14)),
                   ],
                 ),
@@ -67,7 +70,7 @@ class RideWithDriverPannel extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "OTP: $otp",
+                    "${localizations!.otpLabel}$otp",
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -117,7 +120,7 @@ class RideWithDriverPannel extends StatelessWidget {
             width: double.infinity,
             child: isWating
                 ? Lottie.asset(
-                    'assets/animations/waiting.json',
+                    AppAssetsUtil.waitingAnimation,
                     height: 60,
                     fit: BoxFit.contain,
                     repeat: true,
@@ -133,7 +136,7 @@ class RideWithDriverPannel extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     child: Text(
-                      "Make Payment",
+                      localizations!.makePayment,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

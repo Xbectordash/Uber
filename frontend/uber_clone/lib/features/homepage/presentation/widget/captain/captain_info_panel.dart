@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uber_clone/features/auth/data/captain_model/get_captain.dart';
+// import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class CaptainInfoPanel extends StatefulWidget {
   final GetCaptain captainData;
@@ -12,6 +14,7 @@ class CaptainInfoPanel extends StatefulWidget {
 class _CaptainInfoPanelState extends State<CaptainInfoPanel> {
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
        final textStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
           fontWeight: FontWeight.w800,
           color: Colors.black54,
@@ -46,9 +49,9 @@ class _CaptainInfoPanelState extends State<CaptainInfoPanel> {
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
-                status.toUpperCase(),
+                localizations!.activeStatus,
                 style: textStyle?.copyWith(
-                  color: status.toLowerCase() == "active"
+                  color: status.toLowerCase() == localizations!.activeStatus
                       ? Colors.green[800]
                       : Colors.red[800],
                 ),
@@ -84,9 +87,9 @@ class _CaptainInfoPanelState extends State<CaptainInfoPanel> {
                       children: [
                         Text(fullName, style: textStyle),
                         const SizedBox(height: 4),
-                        Text('Color: $vehicleColor', style: textStyle),
+                        Text('${localizations!.colorLabel}$vehicleColor', style: textStyle),
                         if (vehicleType.isNotEmpty)
-                          Text('Type: $vehicleType', style: textStyle),
+                          Text('${localizations!.typeLabel}$vehicleType', style: textStyle),
                       ],
                     ),
                   ),
@@ -94,7 +97,7 @@ class _CaptainInfoPanelState extends State<CaptainInfoPanel> {
               ),
               const SizedBox(height: 12),
               // Plate Number
-              Text('Plate: $plate', style: textStyle),
+              Text('${localizations!.plateLabel}$plate', style: textStyle),
             ],
           ),
         ],

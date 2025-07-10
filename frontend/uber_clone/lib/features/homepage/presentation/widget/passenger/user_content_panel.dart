@@ -6,6 +6,8 @@ import 'package:uber_clone/features/homepage/presentation/widget/passenger/creat
 import 'package:uber_clone/features/homepage/presentation/widget/passenger/search_panel_widget.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/captain/ride_with_driver_panel.dart';
 import 'package:uber_clone/features/homepage/presentation/widget/passenger/vehicle_selection_panel.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
+// import 'package:uber_clone/utils/constans/string_constant.dart';
 
 class PanelContent extends StatefulWidget {
   final PanelController? panelController;
@@ -111,19 +113,20 @@ class _PanelContentState extends State<PanelContent> {
 
       case RideFlowStep.rideCompleted:
         final ride = state.confirmationData;
+        final localizations = AppLocalizations.of(context);
         return Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.check_circle, color: Colors.green, size: 48),
               const SizedBox(height: 12),
-              const Text(
-                'Ride Created!',
+              Text(
+                localizations!.rideCreated,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               if (ride != null) ...[
                 const SizedBox(height: 8),
-                Text('Ride ID: \\${ride.userId ?? '-'}'),
+                Text('${localizations!.rideIdLabel}${ride.userId ?? '-'}'),
               ],
             ],
           ),
@@ -133,6 +136,7 @@ class _PanelContentState extends State<PanelContent> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.all(16),
@@ -143,7 +147,7 @@ class _PanelContentState extends State<PanelContent> {
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              debugPrint('Panel handle tapped');
+              debugPrint(localizations!.panelHandleTapped);
               if (widget.panelController != null) {
                 if (widget.panelController!.isPanelClosed) {
                   widget.panelController!.open();

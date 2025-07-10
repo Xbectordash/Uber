@@ -3,12 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:uber_clone/utils/app_assets_util.dart';
 import 'package:uber_clone/utils/constans/color_const.dart';
 import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -21,7 +23,7 @@ class LandingPage extends StatelessWidget {
             ),
           ),
           Text(
-            StringConstant.welcomeMessage,
+            localizations!.welcomeMessage,
             style: Theme.of(
               context,
             ).textTheme.bodyLarge?.copyWith(fontStyle: FontStyle.italic),
