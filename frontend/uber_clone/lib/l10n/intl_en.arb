@@ -1,0 +1,127 @@
+{
+    "@@locale": "en",
+  
+    "appName": "Rave Ride",
+    "welcomeMessage": "🚗 Your ride, your way! ✨\nWelcome to the new Rave Ride experience! 🎉",
+    "continueText": "Continue",
+  
+    "enterYour": "Enter your",
+  
+    "nameString": "Name",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "emailString": "Email",
+    "phoneString": "Phone",
+    "passwordString": "Password",
+    "confirmPasswordString": "Confirm Password",
+    "createAccountString": "Create Account",
+    "signupMessage": "👋 Hey there, good lookin’ — create your account before this ride finds someone hotter 😏🚗",
+    "accountCreationLogic": "Account creation logic goes here!",
+  
+    "loginString": "Login",
+    "loginMessage": "Welcome back! Please login to continue.",
+    "loginLogic": "Login logic goes here!",
+    "welcomePassenger": "Welcome Passenger! Please login to continue.",
+    "welcomeCaptain": "Welcome Captain! Please login to continue.",
+  
+    "updateInfo": "Update Info",
+    "update": "Update",
+    "updateProfile": "Update Profile",
+    "updateProfileMessage": "Update your profile information below.",
+    "userInfoUpdated": "User info updated!",
+    "profileUpdated": "Profile updated!",
+  
+    "logout": "Logout",
+  
+    "firstNameRequired": "First name is required",
+    "firstNameMin": "First name must be at least 2 characters",
+    "lastNameRequired": "Last name is required",
+    "lastNameMin": "Last name must be at least 2 characters",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email address",
+    "passwordRequired": "Password is required",
+    "passwordMin": "Password must be at least 6 characters",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "vehicleCapacityInvalid": "Invalid vehicle capacity",
+  
+    "homeRouteName": "home-screen",
+    "userHomeRouteName": "user-home",
+    "captainHomeRouteName": "captain-home",
+    "loginRouteName": "login-screen",
+    "signupRouteName": "signup-screen",
+    "updateUserRouteName": "update-user-screen",
+    "captainSignupRouteName": "captain-signup",
+    "landingRouteName": "landing-screen",
+    "appStartRouteName": "app-start-screen",
+  
+    "dontHaveAccount": "Don't have an account? ",
+  
+    "captainSignupMessage": "Register as a Captain and add your vehicle details to get started!",
+  
+    "vehicleDetails": "Vehicle Details",
+    "vehicleColor": "Color",
+    "vehicleColorRequired": "Color required",
+    "vehiclePlate": "Plate",
+    "vehiclePlateRequired": "Plate required",
+    "vehicleCapacity": "Capacity",
+    "vehicleCapacityRequired": "Capacity required",
+    "vehicleType": "Vehicle Type",
+    "vehicleTypeRequired": "Vehicle type required",
+    "captainSignupLogic": "Captain signup logic goes here!",
+    "createCaptainAccountString": "Create Captain Account",
+  
+    "carSubtitle": "Affordable car for daily rides",
+    "taxiSubtitle": "Classic taxi for city travel",
+    "motoSubtitle": "Affordable moto for quick trips",
+  
+    "carType": "car",
+    "autoType": "auto",
+    "motorcycleType": "motorcycle",
+  
+    "failedToEndRide": "Failed to end ride: ",
+    "unknownError": "Unknown error",
+    "enterOtpToStartRide": "Enter OTP to Start Ride",
+    "confirmOtpStartRide": "Confirm OTP & Start Ride",
+  
+    "activeStatus": "active",
+    "colorLabel": "Color: ",
+    "typeLabel": "Type: ",
+    "plateLabel": "Plate: ",
+  
+    "rideStarted": "🚕 Ride Started",
+    "sourceLabel": "Source:",
+    "destinationLabel": "Destination:",
+    "fareLabel": "Fare: ",
+    "rideCompleted": "Ride Completed",
+  
+    "driverLabel": "Driver: ",
+    "vehicleNoLabel": "Vehicle No: ",
+    "vehicleLabel": "Vehicle: ",
+    "languageLabel": "Language: ",
+    "selectLanguage": "Select Language",
+    "otpLabel": "OTP: ",
+    "makePayment": "Make Payment",
+  
+    "waitingForDriver": "Waiting for Driver...",
+    "cancelRide": "Cancel Ride",
+  
+    "startTypingHint": "Start typing to see suggestions.",
+    "pickupHint": "Pickup location",
+    "destinationHint": "Where to?",
+  
+    "carName": "Car",
+    "autoName": "Auto",
+    "motorcycleName": "Motorcycle",
+  
+    "rideCreated": "Ride Created!",
+    "rideIdLabel": "Ride ID: ",
+    "panelHandleTapped": "Panel handle tapped",
+  
+    "selectVehicle": "Please select a vehicle",
+    "errorPrefix": "Error: ",
+  "noSuggestions": "No suggestions found.",
+  "startTyping": "Start typing to see suggestions."
+  
+  }
+  

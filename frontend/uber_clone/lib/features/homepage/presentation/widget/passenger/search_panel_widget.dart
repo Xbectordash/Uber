@@ -1,0 +1,299 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_distance_time/get_distance_time_event.bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_event.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/suggestion/suggestion_state.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare_bloc.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/get_fare/get_fare_event.dart';
+import 'package:uber_clone/features/homepage/presentation/bloc/ride_flow_cubit.dart';
+import 'package:uber_clone/features/homepage/data/create_ride_model.dart';
+// import 'package:uber_clone/utils/constans/string_constant.dart';
+import 'package:uber_clone/l10n/app_localizations.dart';
+
+class SearchPanelWidget extends StatefulWidget {
+  final FocusNode? pickupFocusNode;
+  final FocusNode? destinationFocusNode;
+  const SearchPanelWidget({
+    super.key,
+    this.pickupFocusNode,
+    this.destinationFocusNode,
+  });
+
+  @override
+  State<SearchPanelWidget> createState() => _SearchPanelWidgetState();
+}
+
+class _SearchPanelWidgetState extends State<SearchPanelWidget> {
+  final TextEditingController _pickupController = TextEditingController();
+  Timer? _debounce;
+  bool _initialPrefillDone = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _setCurrentLocation();
+  }
+
+  Future<void> _setCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) return;
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+
+    if (placemarks.isNotEmpty) {
+      Placemark place = placemarks[0];
+      String address = [
+        place.street,
+        place.subLocality,
+        place.locality,
+        place.administrativeArea,
+        place.country
+      ].where((e) => e != null && e.isNotEmpty).join(', ');
+      _initialPrefillDone = false;
+      _pickupController.text = address;
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _initialPrefillDone = true;
+      });
+    }
+  }
+
+  void _onPickupChanged(String value) {
+    if (!_initialPrefillDone) return;
+    if (value.trim().length < 3) {
+      if (_debounce?.isActive ?? false)
+        _debounce!.cancel(); // cancel old debounce
+      BlocProvider.of<SuggestionBloc>(context).add(ResetSuggestionsEvent());
+      return;
+    } else {
+      if (_debounce?.isActive ?? false) _debounce!.cancel();
+      final debouncedValue = value;
+      _debounce = Timer(const Duration(milliseconds: 600), () {
+        BlocProvider.of<SuggestionBloc>(
+          context,
+        ).add(FetchSuggestionsEvent(debouncedValue));
+      });
+    }
+  }
+
+  void _onDestinationChanged(String value) {
+    if (value.trim().length < 3) {
+      if (_debounce?.isActive ?? false) _debounce!.cancel();
+      BlocProvider.of<SuggestionBloc>(context).add(ResetSuggestionsEvent());
+      return;
+    } else {
+      if (_debounce?.isActive ?? false) _debounce!.cancel();
+      final debouncedValue = value;
+      _debounce = Timer(const Duration(milliseconds: 600), () {
+        BlocProvider.of<SuggestionBloc>(
+          context,
+        ).add(FetchSuggestionsEvent(debouncedValue));
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _pickupController.dispose();
+    _debounce?.cancel();
+    // Do not dispose focus nodes here, they are managed by the parent
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextField(
+          onChanged: _onPickupChanged,
+          controller: _pickupController,
+          focusNode: widget.pickupFocusNode,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w800,
+            color: Colors.black54,
+          ),
+          decoration: InputDecoration(
+            hintText: localizations!.pickupHint,
+            hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: Colors.black54,
+            ),
+            prefixIcon: const Icon(
+              Icons.my_location_outlined,
+              color: Colors.black54,
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            filled: true,
+            fillColor: Colors.grey[100],
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          onChanged: _onDestinationChanged,
+          focusNode: widget.destinationFocusNode,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w800,
+            color: Colors.black54,
+          ),
+          decoration: InputDecoration(
+            hintText: localizations.destinationHint,
+            hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: Colors.black54,
+            ),
+            prefixIcon: const Icon(
+              Icons.location_on_outlined,
+              color: Colors.black54,
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            filled: true,
+            fillColor: Colors.grey[100],
+          ),
+        ),
+        const SizedBox(height: 16),
+        BlocBuilder<SuggestionBloc, SuggestionState>(
+          builder: (context, state) {
+            if (state is SuggestionInitialState) {
+              return Center(child: Text(localizations.startTyping));
+            } else if (state is SuggestionLoadingState) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is SuggestionLoadedState) {
+              return Container(
+                constraints: const BoxConstraints(maxHeight: 300), // Maximum height for the suggestion list
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: state.suggestions.length,
+                  itemBuilder: (context, index) {
+                  final suggestion = state.suggestions[index];
+                  return ListTile(
+                    title: Text(
+                      suggestion.description!,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    onTap: () {
+                      debugPrint(
+                        'Selected suggestion: \\${suggestion.description}',
+                      );
+                      debugPrint(
+                        'Pickup controller text: \\${_pickupController.text}',
+                      );
+                      // Determine which field is focused
+                      final isPickupFocused = widget.pickupFocusNode?.hasFocus ?? false;
+                      final isDestinationFocused = widget.destinationFocusNode?.hasFocus ?? false;
+
+                      if (isPickupFocused) {
+                        // Set pickup from suggestion
+                        _pickupController.text = suggestion.description!;
+                        // Optionally, clear destination field if you have a controller for it
+                        // _destinationController?.clear();
+                        // Optionally, unfocus pickup
+                        widget.pickupFocusNode?.unfocus();
+                        return;
+                      } else if (isDestinationFocused) {
+                        // Set destination from suggestion
+                        // _destinationController?.text = suggestion.description!;
+                        // Only call APIs if both pickup and destination are filled and different
+                        if (_pickupController.text.isNotEmpty && _pickupController.text != suggestion.description) {
+                          BlocProvider.of<GetDistanceTimeBloc>(context).add(
+                            FetchDistanceTimeEvent(
+                              origin: _pickupController.text,
+                              destination: suggestion.description!,
+                            ),
+                          );
+                          try {
+                            debugPrint(
+                              'Dispatching FetchRoutesEvent: origin=${_pickupController.text}, destination=${suggestion.description}',
+                            );
+                            BlocProvider.of<GetFareBloc>(context).add(
+                              FetchFareEvent(
+                                pickup: _pickupController.text,
+                                destination: suggestion.description!,
+                              ),
+                            );
+                            // BlocProvider.of<GetRoutesBloc>(context).add(
+                            //   FetchRoutesEvent(
+                            //     origin: _pickupController.text,
+                            //     destination: suggestion.description!,
+                            //   ),
+                            // );
+                          } catch (e) {
+                            debugPrint(
+                              'GetFareBloc or GetRoutesBloc not found: $e',
+                            );
+                          }
+                          widget.destinationFocusNode?.unfocus();
+                          // Stepper flow: If both pickup and destination are set, move to vehicle selection
+                          final pickup = _pickupController.text;
+                          final dropoff = suggestion.description!;
+                          if (pickup.isNotEmpty && dropoff.isNotEmpty) {
+                            final createRideRequest = CreateRideRequest(
+                              pickupLocation: pickup,
+                              dropoffLocation: dropoff,
+                            );
+                            BlocProvider.of<RideFlowCubit>(
+                              context,
+                            ).toVehicleSelection(createRideRequest);
+                          }
+                        } else {
+                          // If pickup is empty, set pickup instead
+                          _pickupController.text = suggestion.description!;
+                          widget.pickupFocusNode?.unfocus();
+                        }
+                        return;
+                      } else {
+                        // Default: set pickup if empty, else do nothing
+                        if (_pickupController.text.isEmpty) {
+                          _pickupController.text = suggestion.description!;
+                          widget.pickupFocusNode?.unfocus();
+                        }
+                        return;
+                      }
+                    },
+                  );
+                  },
+                ),
+              );
+            } else if (state is SuggestionEmptyState) {
+              return Center(child: Text(localizations.noSuggestions));
+            } else if (state is SuggestionInitialState) {
+              return Center(child: Text(localizations.startTyping));
+            } else if (state is SuggestionErrorState) {
+              return Center(child: Text('Error: \\${state.error}'));
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+      ],
+    );
+  }
+}

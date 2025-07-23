@@ -1,0 +1,126 @@
+{
+    "@@locale": "gu",
+  
+    "appName": "રેવ રાઈડ",
+    "welcomeMessage": "🚗 તમારી સવારી, તમારા રીતે! ✨\nનવી રેવ રાઈડ અનુભૂતિમાં આપનું સ્વાગત છે! 🎉",
+    "continueText": "ચાલું રાખો",
+  
+    "enterYour": "તમારું દાખલ કરો",
+  
+    "nameString": "નામ",
+    "firstName": "પ્રથમ નામ",
+    "lastName": "અટક",
+    "emailString": "ઇમેઇલ",
+    "phoneString": "ફોન",
+    "passwordString": "પાસવર્ડ",
+    "confirmPasswordString": "પાસવર્ડની પુષ્ટિ કરો",
+    "createAccountString": "એકાઉન્ટ બનાવો",
+    "signupMessage": "👋 હાય સુંદર! તમારું એકાઉન્ટ બનાવો નહીં તો આ સવારી બીજાને મળી જશે 😏🚗",
+    "accountCreationLogic": "એકાઉન્ટ બનાવવાની લોજિક અહીં આવશે!",
+  
+    "loginString": "લોગિન",
+    "loginMessage": "પાછા આવવાને માટે સ્વાગત છે! આગળ વધવા માટે લોગિન કરો.",
+    "loginLogic": "લોગિન લોજિક અહીં આવશે!",
+    "welcomePassenger": "મુસાફરનું સ્વાગત છે! આગળ વધવા માટે લોગિન કરો.",
+    "welcomeCaptain": "કૅપ્ટનનું સ્વાગત છે! આગળ વધવા માટે લોગિન કરો.",
+  
+    "updateInfo": "માહિતી સુધારો",
+    "update": "અપડેટ કરો",
+    "updateProfile": "પ્રોફાઇલ અપડેટ કરો",
+    "updateProfileMessage": "તમારી માહિતી નીચે અપડેટ કરો.",
+    "userInfoUpdated": "વપરાશકર્તાની માહિતી અપડેટ થઈ!",
+    "profileUpdated": "પ્રોફાઇલ અપડેટ થઈ!",
+  
+    "logout": "લોગઆઉટ",
+  
+    "firstNameRequired": "પ્રથમ નામ જરૂરી છે",
+    "firstNameMin": "પ્રથમ નામ ઓછામાં ઓછું 2 અક્ષરનું હોવું જોઈએ",
+    "lastNameRequired": "અટક જરૂરી છે",
+    "lastNameMin": "અટક ઓછામાં ઓછું 2 અક્ષરનું હોવું જોઈએ",
+    "emailRequired": "ઇમેઇલ જરૂરી છે",
+    "emailInvalid": "માન્ય ઇમેઇલ દાખલ કરો",
+    "passwordRequired": "પાસવર્ડ જરૂરી છે",
+    "passwordMin": "પાસવર્ડ ઓછામાં ઓછો 6 અક્ષરનો હોવો જોઈએ",
+    "confirmPasswordRequired": "કૃપા કરીને પાસવર્ડની પુષ્ટિ કરો",
+    "passwordsDoNotMatch": "પાસવર્ડ મેળ ખાતા નથી",
+    "vehicleCapacityInvalid": "અમાન્ય વાહન ક્ષમતા",
+  
+    "homeRouteName": "હોમ સ્ક્રીન",
+    "userHomeRouteName": "મુસાફર હોમ",
+    "captainHomeRouteName": "કૅપ્ટન હોમ",
+    "loginRouteName": "લોગિન સ્ક્રીન",
+    "signupRouteName": "સાઇનઅપ સ્ક્રીન",
+    "updateUserRouteName": "યૂઝર અપડેટ સ્ક્રીન",
+    "captainSignupRouteName": "કૅપ્ટન સાઇનઅપ",
+    "landingRouteName": "લૅન્ડિંગ સ્ક્રીન",
+    "appStartRouteName": "એપ શરૂ સ્ક્રીન",
+  
+    "dontHaveAccount": "તમારું એકાઉન્ટ નથી? ",
+  
+    "captainSignupMessage": "કૅપ્ટન તરીકે નોંધણી કરો અને શરૂ કરવા માટે વાહન વિગતો ઉમેરો!",
+  
+    "vehicleDetails": "વાહન વિગતો",
+    "vehicleColor": "રંગ",
+    "vehicleColorRequired": "રંગ જરૂરી છે",
+    "vehiclePlate": "પ્લેટ નંબર",
+    "vehiclePlateRequired": "પ્લેટ જરૂરી છે",
+    "vehicleCapacity": "ક્ષમતા",
+    "vehicleCapacityRequired": "ક્ષમતા જરૂરી છે",
+    "vehicleType": "વાહન પ્રકાર",
+    "vehicleTypeRequired": "વાહન પ્રકાર જરૂરી છે",
+    "captainSignupLogic": "કૅપ્ટન સાઇનઅપ લોજિક અહીં આવશે!",
+    "createCaptainAccountString": "કૅપ્ટન એકાઉન્ટ બનાવો",
+  
+    "carSubtitle": "દૈનિક મુસાફરી માટે સસ્તી કાર",
+    "taxiSubtitle": "શહેરની મુસાફરી માટે ક્લાસિક ટેક્સી",
+    "motoSubtitle": "ઝડપી મુસાફરી માટે સસ્તું મોટરસાયકલ",
+  
+    "carType": "કાર",
+    "autoType": "ઓટો",
+    "motorcycleType": "મોટરસાયકલ",
+  
+    "failedToEndRide": "સવારી પૂર્ણ કરવામાં નિષ્ફળ: ",
+    "unknownError": "અજ્ઞાત ભૂલ",
+    "enterOtpToStartRide": "સવારી શરૂ કરવા માટે OTP દાખલ કરો",
+    "confirmOtpStartRide": "OTPની પુષ્ટિ કરો અને સવારી શરૂ કરો",
+  
+    "activeStatus": "સક્રિય",
+    "colorLabel": "રંગ: ",
+    "typeLabel": "પ્રકાર: ",
+    "plateLabel": "પ્લેટ: ",
+  
+    "rideStarted": "🚕 સવારી શરૂ થઈ",
+    "sourceLabel": "સ્રોત:",
+    "destinationLabel": "ગંતવ્ય:",
+    "fareLabel": "ભાડું: ",
+    "rideCompleted": "સવારી પૂર્ણ થઈ",
+  
+    "driverLabel": "ડ્રાઇવર: ",
+    "vehicleNoLabel": "વાહન નંબર: ",
+    "vehicleLabel": "વાહન: ",
+    "selectLanguage": "ભાષા પસંદ કરો",
+    "otpLabel": "OTP: ",
+    "makePayment": "ચુકવણી કરો",
+  
+    "waitingForDriver": "ડ્રાઇવર માટે રાહ જોઈ રહ્યા છીએ...",
+    "cancelRide": "સવારી રદ કરો",
+  
+    "startTypingHint": "સૂચનો જોવા માટે ટાઈપ કરવાનું શરૂ કરો.",
+    "pickupHint": "પિકઅપ સ્થાન",
+    "destinationHint": "ક્યાં જવું છે?",
+  
+    "carName": "કાર",
+    "autoName": "ઓટો",
+    "motorcycleName": "મોટરસાયકલ",
+  
+    "rideCreated": "સવારી બનાવાઈ!",
+    "rideIdLabel": "સવારી ID: ",
+    "panelHandleTapped": "પેનલ હેન્ડલ પર ટૅપ કરાયું",
+  
+    "selectVehicle": "કૃપા કરીને વાહન પસંદ કરો",
+    "errorPrefix": "ભૂલ: ",
+    "noSuggestions": "કોઈ સૂચનો મળ્યા નથી.",
+"startTyping": "સૂચનો જોવા માટે લખવાનું શરૂ કરો."
+
+  }
+  
